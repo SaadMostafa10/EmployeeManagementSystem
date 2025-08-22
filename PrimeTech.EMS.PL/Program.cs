@@ -27,6 +27,8 @@ namespace PrimeTech.EMS.PL
             //     options.UseSqlServer(connectionString);
             // });
             builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>();
+            // Allow DI For IDepartmentRepository
+
 
 
 

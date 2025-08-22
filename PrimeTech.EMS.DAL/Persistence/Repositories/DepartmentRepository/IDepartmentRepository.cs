@@ -10,6 +10,7 @@ namespace PrimeTech.EMS.DAL.Persistence.Repositories.DepartmentRepository
     public interface IDepartmentRepository
     {
         IEnumerable<Department> GetAll(bool WithAsNoTracking = true);
+        IQueryable<Department> GetAllAsQueryable();
         Department? Get(int id);
         int Add(Department entity);
         int Update(Department entity);

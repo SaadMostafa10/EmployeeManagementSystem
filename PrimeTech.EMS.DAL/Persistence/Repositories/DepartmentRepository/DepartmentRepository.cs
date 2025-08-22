@@ -25,6 +25,11 @@ namespace PrimeTech.EMS.DAL.Persistence.Repositories.DepartmentRepository
 
             return _dbContext.Departments.ToList();
         }
+        // Question not Understand
+        public IQueryable<Department> GetAllAsQueryable()
+        {
+            return _dbContext.Departments;
+        }
         public Department? Get(int id)
         {
             return _dbContext.Departments.Find(id);
@@ -49,8 +54,6 @@ namespace PrimeTech.EMS.DAL.Persistence.Repositories.DepartmentRepository
             _dbContext.Departments.Remove(entity);
             return _dbContext.SaveChanges();
         }
-
-        
 
         
     }

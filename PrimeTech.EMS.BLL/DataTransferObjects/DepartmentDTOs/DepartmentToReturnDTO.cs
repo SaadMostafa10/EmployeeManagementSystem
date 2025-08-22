@@ -1,19 +1,18 @@
-﻿using PrimeTech.EMS.DAL.Models.Shared;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PrimeTech.EMS.DAL.Models.Department
+namespace PrimeTech.EMS.BLL.DataTransferObjects.DepartmentDTOs
 {
-    public class Department:BaseEntity
+    public class DepartmentToReturnDTO
     {
+        public int Id { get; set; } 
         public string Name { get; set; } = null!;
         public string Code { get; set; } = null!;
-        public string? Description { get; set; }
+        [Display(Name ="Date Of Creation")]
         public DateOnly CreationDate { get; set; }
-
-
     }
 }
