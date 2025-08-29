@@ -44,6 +44,7 @@ namespace PrimeTech.EMS.BLL.Services.DepartmentServices
                     CreatedOn = department.CreatedOn,
                     LastModifiedBy = department.LastModifiedBy,
                     LastModifiedOn = department.LastModifiedOn,
+                    CreationDate = department.CreationDate
 
                 };
             }

@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using PrimeTech.EMS.BLL.Services.DepartmentServices;
 using PrimeTech.EMS.DAL.Models.Department;
 using PrimeTech.EMS.DAL.Persistance.Data.Contexts;
 using PrimeTech.EMS.DAL.Persistence.Repositories.DepartmentRepository;
@@ -28,7 +29,7 @@ namespace PrimeTech.EMS.PL
             // });
             builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>();
             // Allow DI For IDepartmentRepository
-
+            builder.Services.AddScoped<IDepartmentServices, DepartmentServices>();
 
 
 
