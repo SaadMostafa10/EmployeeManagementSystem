@@ -1,8 +1,10 @@
 using Microsoft.EntityFrameworkCore;
 using PrimeTech.EMS.BLL.Services.DepartmentServices;
+using PrimeTech.EMS.BLL.Services.EmployeeServices;
 using PrimeTech.EMS.DAL.Models.Department;
 using PrimeTech.EMS.DAL.Persistance.Data.Contexts;
 using PrimeTech.EMS.DAL.Persistence.Repositories.DepartmentRepository;
+using PrimeTech.EMS.DAL.Persistence.Repositories.EmployeeRepository;
 
 namespace PrimeTech.EMS.PL
 {
@@ -31,6 +33,9 @@ namespace PrimeTech.EMS.PL
             // Allow DI For IDepartmentRepository
             builder.Services.AddScoped<IDepartmentServices, DepartmentServices>();
 
+            builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+
+            builder.Services.AddScoped<IEmployeeService, EmployeeService>();
 
 
             #endregion

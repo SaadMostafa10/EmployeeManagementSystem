@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PrimeTech.EMS.DAL.Models.Department;
+using PrimeTech.EMS.DAL.Models.EmployeeModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,6 +27,7 @@ namespace PrimeTech.EMS.DAL.Persistance.Data.Contexts
             // Apply All Configurations Classes // Fluent API
         }
         public DbSet<Department> Departments { get; set; }
+        public DbSet<Employee> Employees { get; set; }
 
     }
 }
