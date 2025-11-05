@@ -28,9 +28,35 @@ namespace PrimeTech.EMS.PL.Controllers
         #endregion
 
         #region Index
+
+        // View Storage : ViewData , ViewBag => Deal With The Storage
+        // Dictionary
+        // Send Extra Data
+        // 1. Send Data From Controller [Action] To View
+        // 2. Send Data From View To PartialView
+        // 3. Send Data From View To Layout
+
+
+
+
         [HttpGet]  //GET : BaseURL/Department/Index 
         public IActionResult Index()
         {
+            // View`s Dictionary : Pass Data From Controller [Action] to View or (From View --> [PartialView , Layout])
+
+            // 1. ViewData : is a Dictionary Type Property (ASP.Net Framework 3.5)
+            //             => Property is inherited from Controller Class [Dictionary]
+            //             => It`s Helps To Transfer Data From Controller [Action] To View
+
+            // ViewData["Obj"] = "Hello View Data";
+
+            // 1. ViewBag : is a Dynamic Type Property (ASP.Net Framework 4.0)
+            //             => Property is inherited from Controller Class [Dictionary]
+            //             => It`s Helps To Transfer Data From Controller [Action] To View
+
+            // ViewBag.Obj = "Hello View Bag";
+            // ViewBag.Obj = new { name = "saad", Id = 1 };  // RunTime Error
+
             var departments = _departmentServices.GetAllDepartments();
 
             return View(departments);
@@ -46,25 +72,45 @@ namespace PrimeTech.EMS.PL.Controllers
         }
 
         [HttpPost] //POST : BaseURL/Department/Create
-        public IActionResult Create(CreatedDepartmentDTO department)
+        [ValidateAntiForgeryToken]   // Action Filter
+        public IActionResult Create(DepartmentViewModel departmentVM)
         {
             if (!ModelState.IsValid)  // Server Side Validation
-                return View(department);
+                return View(departmentVM);
 
             var message = string.Empty;
             try
             {
+                var CreatedDepartment = new CreatedDepartmentDTO()
+                {
+                    Code = departmentVM.Code,
+                    Name = departmentVM.Name,
+                    CreationDate = departmentVM.CreationDate,
+                    Description = departmentVM.Description,
+                };
 
-                var result = _departmentServices.CreateDepartment(department);
-                if (result > 0)
+
+                var Created = _departmentServices.CreateDepartment(CreatedDepartment) > 0;
+
+                // 1. TempData : is a Dictionary Type Property (ASP.Net Framework 3.5)
+                //             => Property is inherited from Controller Class [Dictionary]
+                //             => It`s Helps To Transfer Data From Request To Another Request Action To Another Action
+
+                if (Created)
+                {
+                    TempData["Message"] = "Department is Created Successfuly";
                     return RedirectToAction(nameof(Index));
+                }
+                    
 
                 else
                 {
                     message = "Department is not Created";
+                    TempData["Message"] =message;
                     ModelState.AddModelError(string.Empty, message);
-                    return View(department);
+                    return View(departmentVM);
                 }
+                //return RedirectToAction(nameof(Index));
 
             }
             catch (Exception ex)
@@ -76,7 +122,7 @@ namespace PrimeTech.EMS.PL.Controllers
                 if (_environment.IsDevelopment())
                 {
                     message = ex.Message;
-                    return View(department);
+                    return View(departmentVM);
                 }
                 else
                 {
@@ -88,6 +134,16 @@ namespace PrimeTech.EMS.PL.Controllers
             }
         }
 
+        #endregion
+
+        #region Details
+        [HttpGet]
+        public IActionResult Details(int? id)
+        {
+            if (!id.HasValue) return BadRequest();
+            var department = _departmentServices.GetDepartmentById(id.Value);
+            return department is null ? NotFound() :View(department);
+        }
         #endregion
 
         #region Update
@@ -103,7 +159,7 @@ namespace PrimeTech.EMS.PL.Controllers
             if (department == null)
                 return NotFound(); // 404
 
-            return View(new DepartmentEditViewModel()
+            return View(new DepartmentViewModel()
             {
                 Code = department.Code,
                 Name = department.Name,
@@ -117,7 +173,8 @@ namespace PrimeTech.EMS.PL.Controllers
         }
 
         [HttpPost] // POST : BaseURL/Department/Edit/id
-        public IActionResult Edit([FromRoute] int id, DepartmentEditViewModel departmentVM)
+        [ValidateAntiForgeryToken]   // Action Filter
+        public IActionResult Edit([FromRoute] int id, DepartmentViewModel departmentVM)
         {
             if (!ModelState.IsValid)
                 return View(departmentVM);
@@ -152,19 +209,21 @@ namespace PrimeTech.EMS.PL.Controllers
         #endregion
 
         #region Delete
-        [HttpGet] // GET :  BaseURL/Department/Delete/id  // GET => Not Work in Modal You Can Delete it [GET]
-        public IActionResult Delete(int? id)
-        {
-            if (id == null)
-                return BadRequest(); //400
-            var department = _departmentServices.GetDepartmentById(id.Value);
-
-            if (department == null)
-                return NotFound(); // 404
-
-            return View(department);
-        }
+        // [HttpGet] // GET :  BaseURL/Department/Delete/id  // GET => Not Work in Modal You Can Delete it [GET]
+        // public IActionResult Delete(int? id)
+        // {
+        //     if (id == null)
+        //         return BadRequest(); //400
+        //     var department = _departmentServices.GetDepartmentById(id.Value);
+        // 
+        //     if (department == null)
+        //         return NotFound(); // 404
+        // 
+        //     return View(department);
+        // }
+       
         [HttpPost]
+        [ValidateAntiForgeryToken]   // Action Filter
         public IActionResult Delete([FromRoute] int id)
         {
             var message = string.Empty;
@@ -175,14 +234,14 @@ namespace PrimeTech.EMS.PL.Controllers
                     return RedirectToAction(nameof(Index));
                 message = "An Error Occured During Deleting This Department :(";
                 return View(deletedDepartment);
-
+        
             }
             catch (Exception ex)
             {
                 message = _environment.IsDevelopment() ? ex.Message : "An Error Occured During Updating Department :(";
             }
             return RedirectToAction(nameof(Index));
-
+        
         } 
         #endregion
 

@@ -26,7 +26,12 @@ namespace PrimeTech.EMS.DAL.Persistence.Repositories._Generic
             return _dbContext.Set<TEntity>().ToList();
         }
         // Question not Understand
-        public IQueryable<TEntity> GetAllAsQueryable()
+        public IQueryable<TEntity> GetIQueryable()
+        {
+            return _dbContext.Set<TEntity>();
+        }
+
+        public IEnumerable<TEntity> GetIEnumerable()
         {
             return _dbContext.Set<TEntity>();
         }
@@ -51,9 +56,12 @@ namespace PrimeTech.EMS.DAL.Persistence.Repositories._Generic
         }
         public int Delete(TEntity entity)
         {
-            _dbContext.Set<TEntity>().Remove(entity);
+            //_dbContext.Set<TEntity>().Remove(entity);  <- Hard Delete
+            entity.IsDeleted = true;                   //<- Soft Delete
+            _dbContext.Set<TEntity>().Update(entity);
             return _dbContext.SaveChanges();
         }
 
+        
     }
 }

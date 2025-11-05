@@ -22,7 +22,8 @@ namespace PrimeTech.EMS.BLL.Services.EmployeeServices
         public IEnumerable<EmployeeToReturnDTO> GetAllEmployees()
         {
             var employees = _employeeRepository
-            .GetAllAsQueryable()
+            .GetIQueryable()
+            .Where(E => !E.IsDeleted)
             .Select(employee => new EmployeeToReturnDTO()
             {
                 Id = employee.Id,
@@ -33,7 +34,7 @@ namespace PrimeTech.EMS.BLL.Services.EmployeeServices
                 Email= employee.Email,
                 Gender = employee.Gender.ToString(),
                 EmployeeType = employee.EmployeeType.ToString(),
-            });
+            }).ToList();
             return employees;
                                              
         }

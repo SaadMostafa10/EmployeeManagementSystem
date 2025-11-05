@@ -11,7 +11,8 @@ namespace PrimeTech.EMS.DAL.Persistence.Repositories._Generic
     public interface IGenericRepository<TEntity> where TEntity : BaseEntity
     {
         IEnumerable<TEntity> GetAll(bool WithAsNoTracking = true);
-        IQueryable<TEntity> GetAllAsQueryable();
+        IQueryable<TEntity> GetIQueryable();
+        IEnumerable<TEntity> GetIEnumerable();
         TEntity? Get(int id);
         int Add(TEntity entity);
         int Update(TEntity entity);

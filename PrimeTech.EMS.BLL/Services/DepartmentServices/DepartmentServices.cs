@@ -20,7 +20,10 @@ namespace PrimeTech.EMS.BLL.Services.DepartmentServices
         public IEnumerable<DepartmentToReturnDTO> GetAllDepartments()
         {
             // Convert Department To=> DepartmentToReturnDTO
-            var departments = _departmentRepository.GetAllAsQueryable().Select(department => new DepartmentToReturnDTO
+            var departments = _departmentRepository
+                .GetIQueryable()
+                .Where(D => !D.IsDeleted)
+                .Select(department => new DepartmentToReturnDTO
             {
                 Id = department.Id,
                 Name = department.Name,
