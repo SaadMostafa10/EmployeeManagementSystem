@@ -1,4 +1,4 @@
-﻿using PrimeTech.EMS.DAL.Models.Department;
+﻿using PrimeTech.EMS.DAL.Models.DepartmentModel;
 using PrimeTech.EMS.DAL.Persistence.Repositories._Generic;
 using System;
 using System.Collections.Generic;

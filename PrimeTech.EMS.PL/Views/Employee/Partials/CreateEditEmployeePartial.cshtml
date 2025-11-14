@@ -1,8 +1,9 @@
-﻿@using PrimeTech.EMS.BLL.DataTransferObjects.EmployeeDTOs
-@using PrimeTech.EMS.DAL.Models.Shared.Enums
-@model UpdatedEmployeeDTO
-
-
+﻿@model UpdatedEmployeeDTO
+@inject IDepartmentServices departmentService
+@{
+    var Departments = new SelectList(departmentService.GetAllDepartments(),
+                               nameof(DepartmentToReturnDTO.Id),nameof(DepartmentToReturnDTO.Name));
+}
 @* action="/Department/Create" method="post" => asp-action="Create" *@
 
 @* <form action="/Department/Create" method="post"></form> *@
@@ -54,6 +55,16 @@
         </select>
         <span asp-validation-for="EmployeeType" class="text-danger"></span>
     </div>
+
+    <div class="form-group mb-3 col-6">
+        <label class="form-label" asp-for="DepartmentId"></label>
+        <select asp-for="DepartmentId" asp-items="@Departments"
+                class="form-control">
+            <option value="">Select Department</option>
+        </select>
+        <span asp-validation-for="DepartmentId" class="text-danger"></span>
+    </div>
+
     <div class="form-group col-6">
         <label class="control-label" asp-for="Gender"></label> <br />
         @foreach (Gender genderOption in Enum.GetValues(typeof(Gender)))

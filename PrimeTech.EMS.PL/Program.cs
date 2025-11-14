@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using PrimeTech.EMS.BLL.Services.DepartmentServices;
 using PrimeTech.EMS.BLL.Services.EmployeeServices;
-using PrimeTech.EMS.DAL.Models.Department;
+using PrimeTech.EMS.DAL.Models.DepartmentModel;
 using PrimeTech.EMS.DAL.Persistance.Data.Contexts;
 using PrimeTech.EMS.DAL.Persistence.Repositories.DepartmentRepository;
 using PrimeTech.EMS.DAL.Persistence.Repositories.EmployeeRepository;
@@ -20,6 +20,7 @@ namespace PrimeTech.EMS.PL
 
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
             {
+                options.UseLazyLoadingProxies();
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
             });
             // ==

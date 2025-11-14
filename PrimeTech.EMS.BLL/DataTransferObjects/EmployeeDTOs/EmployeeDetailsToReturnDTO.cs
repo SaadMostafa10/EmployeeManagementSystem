@@ -33,5 +33,6 @@ namespace PrimeTech.EMS.BLL.DataTransferObjects.EmployeeDTOs
         public string Gender { get; set; } = null!;
         [Display(Name = "Employee Type")]
         public string EmployeeType { get; set; } = null!;
+        public string? Department { get; set; }
     }
 }

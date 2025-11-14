@@ -1,5 +1,4 @@
-﻿@using PrimeTech.EMS.BLL.DataTransferObjects.EmployeeDTOs
-@model EmployeeDetailsToReturnDTO
+﻿@model EmployeeDetailsToReturnDTO
 
 
 <!-- Bootstrap Tabs-->
@@ -46,14 +45,14 @@
                 <input asp-for="PhoneNumber" class="form-control" readonly />
             </div>
 
-            <div class="form-group col-6">
-                <label asp-for="EmployeeType" class="control-label"></label>
-                <select asp-for="EmployeeType" disabled asp-items="Html.GetEnumSelectList<EmployeeType>()" class="form-control">
-                    <option value="">
-                        Select Employee Type
-                    </option>
-                </select>
+            
+
+            <div class="form-group mb-3 col-6">
+                <label class="form-label" asp-for="EmployeeType"></label>
+                <input asp-for="EmployeeType" class="form-control" readonly />
             </div>
+
+            
             <div class="form-group col-6">
                 <label class="control-label" asp-for="Gender"></label> <br />
                 @foreach (Gender genderOption in Enum.GetValues(typeof(Gender)))
@@ -68,6 +67,12 @@
                 }
 
             </div>
+
+            <div class="form-group col-6 mb-3">
+                <label class="col-form-label" asp-for="Department"></label>
+                <input asp-for="Department" class="form-control" readonly />
+            </div>
+
             <div class="form-group col-6 mt-3">
                 <label class="col-form-label" asp-for="HiringDate"></label>
                 <input type="date" asp-for="HiringDate" class="form-control" readonly />

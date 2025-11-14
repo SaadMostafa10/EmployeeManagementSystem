@@ -1,27 +1,36 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PrimeTech.EMS.BLL.DataTransferObjects.EmployeeDTOs;
+using PrimeTech.EMS.BLL.Services.DepartmentServices;
 using PrimeTech.EMS.BLL.Services.EmployeeServices;
-using PrimeTech.EMS.DAL.Models.Department;
+using PrimeTech.EMS.DAL.Models.DepartmentModel;
 using PrimeTech.EMS.DAL.Models.Shared.Enums;
+
+
 
 
 namespace PrimeTech.EMS.PL.Controllers
 {
     public class EmployeeController : Controller
     {
+        #region Services
         private readonly IEmployeeService _employeeService;
         private readonly ILogger<EmployeeController> _logger;
         private readonly IWebHostEnvironment _environment;
+        //private readonly IDepartmentServices _departmentService;
 
         public EmployeeController(
           IEmployeeService employeeService,
           ILogger<EmployeeController> logger,
+          //IDepartmentServices departmentService,
           IWebHostEnvironment environment)
         {
             _employeeService = employeeService;
             _logger = logger;
+            //_departmentService = departmentService;
             _environment = environment;
-        }
+        } 
+        #endregion
+
         #region Index
 
         [HttpGet]  //GET : BaseURL/Employee/Index
@@ -36,6 +45,7 @@ namespace PrimeTech.EMS.PL.Controllers
         [HttpGet]
         public IActionResult Create()
         {
+            //ViewData["Departments"] = _departmentService.GetAllDepartments();
             return View();
         }
         [HttpPost]
@@ -103,6 +113,9 @@ namespace PrimeTech.EMS.PL.Controllers
             var employee = _employeeService.GetEmployeeById(id.Value);
             if(employee is null) 
                 return NotFound();
+
+            //ViewData["Departments"] = _departmentService.GetAllDepartments();
+
             return View(new UpdatedEmployeeDTO()
             {
                 Id = employee.Id,
@@ -116,7 +129,7 @@ namespace PrimeTech.EMS.PL.Controllers
                 IsActive = employee.IsActive,
                 Gender = Enum.Parse<Gender>(employee.Gender),
                 EmployeeType = Enum.Parse<EmployeeType>(employee.EmployeeType),
-                
+                //DepartmentId = employee.Department.Id,
 
                 
             });

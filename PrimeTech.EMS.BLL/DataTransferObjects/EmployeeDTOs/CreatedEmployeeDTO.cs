@@ -29,6 +29,8 @@ namespace PrimeTech.EMS.BLL.DataTransferObjects.EmployeeDTOs
         [Display(Name = "Hiring Date")]
         public DateOnly HiringDate { get; set; }
         public Gender Gender { get; set; } 
-        public EmployeeType EmployeeType { get; set; } 
+        public EmployeeType EmployeeType { get; set; }
+        [Display(Name="Department")]
+        public int? DepartmentId { get; set; }
     }
 }

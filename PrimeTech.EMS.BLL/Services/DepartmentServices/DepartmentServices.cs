@@ -1,5 +1,5 @@
 ﻿using PrimeTech.EMS.BLL.DataTransferObjects.DepartmentDTOs;
-using PrimeTech.EMS.DAL.Models.Department;
+using PrimeTech.EMS.DAL.Models.DepartmentModel;
 using PrimeTech.EMS.DAL.Persistence.Repositories.DepartmentRepository;
 using System;
 using System.Collections.Generic;

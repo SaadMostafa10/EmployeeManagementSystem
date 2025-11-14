@@ -1,4 +1,5 @@
-﻿using PrimeTech.EMS.BLL.DataTransferObjects.EmployeeDTOs;
+﻿using Microsoft.EntityFrameworkCore;
+using PrimeTech.EMS.BLL.DataTransferObjects.EmployeeDTOs;
 using PrimeTech.EMS.DAL.Models.EmployeeModel;
 using PrimeTech.EMS.DAL.Persistence.Repositories.EmployeeRepository;
 using System;
@@ -24,6 +25,7 @@ namespace PrimeTech.EMS.BLL.Services.EmployeeServices
             var employees = _employeeRepository
             .GetIQueryable()
             .Where(E => !E.IsDeleted)
+            .Include(E=> E.Department)
             .Select(employee => new EmployeeToReturnDTO()
             {
                 Id = employee.Id,
@@ -34,6 +36,7 @@ namespace PrimeTech.EMS.BLL.Services.EmployeeServices
                 Email= employee.Email,
                 Gender = employee.Gender.ToString(),
                 EmployeeType = employee.EmployeeType.ToString(),
+                Department = employee.Department.Name,
             }).ToList();
             return employees;
                                              
@@ -56,6 +59,7 @@ namespace PrimeTech.EMS.BLL.Services.EmployeeServices
                     HiringDate = employee.HiringDate,
                     Gender = employee.Gender.ToString(),
                     EmployeeType = employee.EmployeeType.ToString(),
+                    Department = employee.Department?.Name ?? "" // Once Access Department [Name]
                 };
             return null;
         }
@@ -74,6 +78,7 @@ namespace PrimeTech.EMS.BLL.Services.EmployeeServices
                 HiringDate = employeeDTO.HiringDate,
                 Gender = employeeDTO.Gender,
                 EmployeeType = employeeDTO.EmployeeType,
+                DepartmentId = employeeDTO.DepartmentId,
                 CreatedBy = 1,  // UserId
                 LastModifiedBy = 1,
                 LastModifiedOn = DateTime.Now,
@@ -100,6 +105,7 @@ namespace PrimeTech.EMS.BLL.Services.EmployeeServices
                 CreatedBy = 1,
                 LastModifiedBy = 1,
                 CreatedOn = DateTime.UtcNow,
+                DepartmentId = employeeDTO.DepartmentId
 
             };
             return _employeeRepository.Update(employee);
