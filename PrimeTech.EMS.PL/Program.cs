@@ -16,6 +16,12 @@ namespace PrimeTech.EMS.PL
 
             
             #region Add services to the container.
+
+            // Services LifeTime 
+            // 1. Singelton : Per Application  [in caching , logging service]
+            // 2. Scoped   : Per Request
+            // 3. Transient : Per Operation
+
             builder.Services.AddControllersWithViews();
 
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
