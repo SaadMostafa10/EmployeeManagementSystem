@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using PrimeTech.EMS.BLL.DataTransferObjects.EmployeeDTOs;
 using PrimeTech.EMS.DAL.Models.EmployeeModel;
 using PrimeTech.EMS.DAL.Persistence.Repositories.EmployeeRepository;
@@ -20,11 +21,11 @@ namespace PrimeTech.EMS.BLL.Services.EmployeeServices
             _employeeRepository = employeeRepository;
         }
 
-        public IEnumerable<EmployeeToReturnDTO> GetAllEmployees()
+        public IEnumerable<EmployeeToReturnDTO> GetEmployees(string search)
         {
             var employees = _employeeRepository
             .GetIQueryable()
-            .Where(E => !E.IsDeleted)
+            .Where(E => !E.IsDeleted && (string.IsNullOrEmpty(search) || E.Name.ToLower().Contains(search.ToLower())))
             .Include(E=> E.Department)
             .Select(employee => new EmployeeToReturnDTO()
             {
@@ -120,5 +121,7 @@ namespace PrimeTech.EMS.BLL.Services.EmployeeServices
             return false;
 
         }
+
+        
     }
 }

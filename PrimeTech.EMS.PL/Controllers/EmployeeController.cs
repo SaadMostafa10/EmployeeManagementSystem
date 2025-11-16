@@ -34,9 +34,9 @@ namespace PrimeTech.EMS.PL.Controllers
         #region Index
 
         [HttpGet]  //GET : BaseURL/Employee/Index
-        public IActionResult Index()
+        public IActionResult Index(string search)
         {
-            var employees = _employeeService.GetAllEmployees();
+            var employees = _employeeService.GetEmployees(search);
             return View(employees);
         }
         #endregion

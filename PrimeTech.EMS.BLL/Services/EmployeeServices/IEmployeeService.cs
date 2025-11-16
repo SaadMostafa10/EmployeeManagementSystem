@@ -9,7 +9,7 @@ namespace PrimeTech.EMS.BLL.Services.EmployeeServices
 {
     public interface IEmployeeService
     {
-        IEnumerable<EmployeeToReturnDTO> GetAllEmployees();
+        IEnumerable<EmployeeToReturnDTO> GetEmployees(string search);
         EmployeeDetailsToReturnDTO? GetEmployeeById(int id);
         int CreateEmployee(CreatedEmployeeDTO employeeDTO);
         int UpdateEmployee(UpdatedEmployeeDTO employeeDTO);
