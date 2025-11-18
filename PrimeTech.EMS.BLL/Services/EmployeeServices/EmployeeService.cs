@@ -3,6 +3,7 @@ using Microsoft.IdentityModel.Tokens;
 using PrimeTech.EMS.BLL.DataTransferObjects.EmployeeDTOs;
 using PrimeTech.EMS.DAL.Models.EmployeeModel;
 using PrimeTech.EMS.DAL.Persistence.Repositories.EmployeeRepository;
+using PrimeTech.EMS.DAL.Persistence.UnitOfWork;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,17 +14,17 @@ namespace PrimeTech.EMS.BLL.Services.EmployeeServices
 {
     public class EmployeeService : IEmployeeService
     {
-        private readonly IEmployeeRepository _employeeRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public EmployeeService(IEmployeeRepository employeeRepository) 
+        public EmployeeService(IUnitOfWork unitOfWork) 
         // Ask CLR for Creating Object From EmployeeRepository
         {
-            _employeeRepository = employeeRepository;
+            _unitOfWork = unitOfWork;
         }
 
         public IEnumerable<EmployeeToReturnDTO> GetEmployees(string search)
         {
-            var employees = _employeeRepository
+            var employees = _unitOfWork.employeeRepository
             .GetIQueryable()
             .Where(E => !E.IsDeleted && (string.IsNullOrEmpty(search) || E.Name.ToLower().Contains(search.ToLower())))
             .Include(E=> E.Department)
@@ -45,7 +46,7 @@ namespace PrimeTech.EMS.BLL.Services.EmployeeServices
 
         public EmployeeDetailsToReturnDTO? GetEmployeeById(int id)
         {
-            var employee = _employeeRepository .Get(id);
+            var employee = _unitOfWork.employeeRepository.Get(id);
             if (employee != null)
                 return new EmployeeDetailsToReturnDTO()
                 {
@@ -85,7 +86,8 @@ namespace PrimeTech.EMS.BLL.Services.EmployeeServices
                 LastModifiedOn = DateTime.Now,
 
             };
-            return _employeeRepository.Add(employee);
+            _unitOfWork.employeeRepository.Add(employee);
+            return _unitOfWork.Complete();
         }
 
         public int UpdateEmployee(UpdatedEmployeeDTO employeeDTO)
@@ -109,16 +111,18 @@ namespace PrimeTech.EMS.BLL.Services.EmployeeServices
                 DepartmentId = employeeDTO.DepartmentId
 
             };
-            return _employeeRepository.Update(employee);
+            _unitOfWork.employeeRepository.Update(employee);
+            return _unitOfWork.Complete();
 
         }
 
         public bool DeleteEmployee(int id)
         {
-            var employee = _employeeRepository.Get(id);
+            var employeeRepo = _unitOfWork.employeeRepository;
+            var employee = employeeRepo.Get(id);
             if (employee != null)
-                return _employeeRepository.Delete(employee) > 0;
-            return false;
+                 employeeRepo.Delete(employee);
+            return _unitOfWork.Complete() > 0;
 
         }
 

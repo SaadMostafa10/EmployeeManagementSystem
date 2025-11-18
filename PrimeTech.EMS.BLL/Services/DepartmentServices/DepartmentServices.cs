@@ -2,8 +2,10 @@
 using PrimeTech.EMS.BLL.DataTransferObjects.DepartmentDTOs;
 using PrimeTech.EMS.DAL.Models.DepartmentModel;
 using PrimeTech.EMS.DAL.Persistence.Repositories.DepartmentRepository;
+using PrimeTech.EMS.DAL.Persistence.UnitOfWork;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,19 +15,20 @@ namespace PrimeTech.EMS.BLL.Services.DepartmentServices
 {
     public class DepartmentServices : IDepartmentServices
     {
-        private readonly IDepartmentRepository _departmentRepository;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
-        public DepartmentServices(IDepartmentRepository departmentRepository ,IMapper mapper) // Ask CLR For Creating Object From DepartmentRepository
+        public DepartmentServices( IUnitOfWork unitOfWork,IMapper mapper) // Ask CLR For Creating Object From DepartmentRepository
         {
-            _departmentRepository = departmentRepository;
+            
+            _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
         public IEnumerable<DepartmentToReturnDTO> GetAllDepartments()
         {
 
             // Convert Department To=> DepartmentToReturnDTO
-            var departments = _departmentRepository
+            var departments = _unitOfWork.departmentRepository
                 .GetIQueryable()
                 .Where(D => !D.IsDeleted);
                 //.Select(department => new DepartmentToReturnDTO
@@ -43,7 +46,7 @@ namespace PrimeTech.EMS.BLL.Services.DepartmentServices
         }
         public DepartmentDetailsToReturnDTO? GetDepartmentById(int id)
         {
-            var department = _departmentRepository.Get(id);
+            var department = _unitOfWork.departmentRepository.Get(id);
             if (department is { })
             {
                 var departmentDetails = _mapper.Map<Department, DepartmentDetailsToReturnDTO>(department);
@@ -89,7 +92,8 @@ namespace PrimeTech.EMS.BLL.Services.DepartmentServices
             ///
             ///};
 
-            return _departmentRepository.Add(department); 
+            _unitOfWork.departmentRepository.Add(department);
+            return _unitOfWork.Complete();
         }
         public int UpdateDepartment(UpdatedDepartmentDTO departmentDTO)
         {
@@ -116,14 +120,16 @@ namespace PrimeTech.EMS.BLL.Services.DepartmentServices
             ///    LastModifiedOn = DateTime.UtcNow,
             ///};
            
-            return _departmentRepository.Update(department);
+            _unitOfWork.departmentRepository.Update(department);
+            return _unitOfWork.Complete();
         }
         public bool DeleteDepartment(int id)
         {
-            var department = _departmentRepository.Get(id);
+            var departmentRepo = _unitOfWork.departmentRepository;
+            var department = departmentRepo.Get(id);
             if (department != null)
-                return _departmentRepository.Delete(department) > 0;
-            return false;
+                 departmentRepo.Delete(department);
+            return _unitOfWork.Complete() > 0;
         }
 
         

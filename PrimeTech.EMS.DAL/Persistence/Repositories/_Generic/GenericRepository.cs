@@ -44,22 +44,14 @@ namespace PrimeTech.EMS.DAL.Persistence.Repositories._Generic
             // 
             // return TEntity;
         }
-        public int Add(TEntity entity)
-        {
-            _dbContext.Set<TEntity>().Add(entity);
-            return _dbContext.SaveChanges();
-        }
-        public int Update(TEntity entity)
-        {
-            _dbContext.Set<TEntity>().Update(entity);
-            return _dbContext.SaveChanges();
-        }
-        public int Delete(TEntity entity)
+        public void Add(TEntity entity) => _dbContext.Set<TEntity>().Add(entity);
+        public void Update(TEntity entity) => _dbContext.Set<TEntity>().Update(entity);
+        public void Delete(TEntity entity)
         {
             //_dbContext.Set<TEntity>().Remove(entity);  <- Hard Delete
             entity.IsDeleted = true;                   //<- Soft Delete
             _dbContext.Set<TEntity>().Update(entity);
-            return _dbContext.SaveChanges();
+            
         }
 
         

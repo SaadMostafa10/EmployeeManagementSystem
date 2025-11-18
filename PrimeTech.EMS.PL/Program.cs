@@ -7,6 +7,7 @@ using PrimeTech.EMS.DAL.Models.DepartmentModel;
 using PrimeTech.EMS.DAL.Persistance.Data.Contexts;
 using PrimeTech.EMS.DAL.Persistence.Repositories.DepartmentRepository;
 using PrimeTech.EMS.DAL.Persistence.Repositories.EmployeeRepository;
+using PrimeTech.EMS.DAL.Persistence.UnitOfWork;
 
 namespace PrimeTech.EMS.PL
 {
@@ -38,11 +39,13 @@ namespace PrimeTech.EMS.PL
             // {
             //     options.UseSqlServer(connectionString);
             // });
-            builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>();
+            // builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>();
             // Allow DI For IDepartmentRepository
             builder.Services.AddScoped<IDepartmentServices, DepartmentServices>();
 
-            builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+            builder.Services.AddScoped<IUnitOfWork,UnitOfWork>();
+
+            // builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
 
             builder.Services.AddScoped<IEmployeeService, EmployeeService>();
 
