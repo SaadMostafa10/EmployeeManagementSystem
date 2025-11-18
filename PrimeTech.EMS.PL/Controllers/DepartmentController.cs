@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using PrimeTech.EMS.BLL.DataTransferObjects.DepartmentDTOs;
 using PrimeTech.EMS.BLL.Services.DepartmentServices;
+using PrimeTech.EMS.DAL.Models.DepartmentModel;
 using PrimeTech.EMS.PL.Models.Department;
 
 namespace PrimeTech.EMS.PL.Controllers
@@ -13,16 +15,19 @@ namespace PrimeTech.EMS.PL.Controllers
         #region Services
         private readonly IDepartmentServices _departmentServices;
         private readonly ILogger<DepartmentController> _logger;
+        private readonly IMapper _mapper;
         private readonly IWebHostEnvironment _environment;
 
         public DepartmentController(
             IDepartmentServices departmentServices,
             ILogger<DepartmentController> logger,
+            IMapper mapper,
             IWebHostEnvironment environment)
 
         {
             _departmentServices = departmentServices;
             _logger = logger;
+            _mapper = mapper;
             _environment = environment;
         }
         #endregion
@@ -81,13 +86,15 @@ namespace PrimeTech.EMS.PL.Controllers
             var message = string.Empty;
             try
             {
-                var CreatedDepartment = new CreatedDepartmentDTO()
-                {
-                    Code = departmentVM.Code,
-                    Name = departmentVM.Name,
-                    CreationDate = departmentVM.CreationDate,
-                    Description = departmentVM.Description,
-                };
+                var CreatedDepartment = _mapper.Map<CreatedDepartmentDTO>(departmentVM); 
+                // Manual Mapping  
+                ///var CreatedDepartment = new CreatedDepartmentDTO()
+                ///{
+                ///    Code = departmentVM.Code,
+                ///    Name = departmentVM.Name,
+                ///    CreationDate = departmentVM.CreationDate,
+                ///    Description = departmentVM.Description,
+                ///};
 
 
                 var Created = _departmentServices.CreateDepartment(CreatedDepartment) > 0;
@@ -159,16 +166,20 @@ namespace PrimeTech.EMS.PL.Controllers
             if (department == null)
                 return NotFound(); // 404
 
-            return View(new DepartmentViewModel()
-            {
-                Code = department.Code,
-                Name = department.Name,
-                Description = department.Description,
-                CreationDate = department.CreationDate,
+            var departmentVM = _mapper.Map<DepartmentDetailsToReturnDTO, DepartmentViewModel>(department);
+            return View(departmentVM);
 
-            });
+            // Manual Mapping
+            ///return View(new DepartmentViewModel()
+            ///{
+            ///    Code = department.Code,
+            ///    Name = department.Name,
+            ///    Description = department.Description,
+            ///    CreationDate = department.CreationDate,
+            ///
+            ///});
 
-
+            
 
         }
 
@@ -182,14 +193,18 @@ namespace PrimeTech.EMS.PL.Controllers
             var message = string.Empty;
             try
             {
-                var departmentToUpdate = new UpdatedDepartmentDTO()
-                {
-                    Id = id,
-                    Code = departmentVM.Code,
-                    Name = departmentVM.Name,
-                    Description = departmentVM.Description,
-                    CreationDate = departmentVM.CreationDate,
-                };
+                var departmentToUpdate = _mapper.Map<DepartmentViewModel, UpdatedDepartmentDTO>(departmentVM);
+                departmentToUpdate.Id = id;
+                
+                // Manual Mapping
+                ///var departmentToUpdate = new UpdatedDepartmentDTO()
+                ///{
+                ///    Id = id,
+                ///    Code = departmentVM.Code,
+                ///    Name = departmentVM.Name,
+                ///    Description = departmentVM.Description,
+                ///    CreationDate = departmentVM.CreationDate,
+                ///};
 
                 var UpdatedDepartment = _departmentServices.UpdateDepartment(departmentToUpdate) > 0;
 

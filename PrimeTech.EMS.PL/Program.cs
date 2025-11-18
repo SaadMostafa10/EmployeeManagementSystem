@@ -1,4 +1,6 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using PrimeTech.EMS.BLL.Mapping;
 using PrimeTech.EMS.BLL.Services.DepartmentServices;
 using PrimeTech.EMS.BLL.Services.EmployeeServices;
 using PrimeTech.EMS.DAL.Models.DepartmentModel;
@@ -43,6 +45,8 @@ namespace PrimeTech.EMS.PL
             builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
 
             builder.Services.AddScoped<IEmployeeService, EmployeeService>();
+
+            builder.Services.AddAutoMapper(E=>E.AddProfile(new MappingProfile()));
 
 
             #endregion
