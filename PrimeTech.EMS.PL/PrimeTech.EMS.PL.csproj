@@ -18,4 +18,8 @@
     <ProjectReference Include="..\PrimeTech.EMS.BLL\PrimeTech.EMS.BLL.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\files\imgs\" />
+  </ItemGroup>
+
 </Project>
