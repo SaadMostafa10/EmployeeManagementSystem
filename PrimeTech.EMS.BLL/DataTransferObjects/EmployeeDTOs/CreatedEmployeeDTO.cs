@@ -1,4 +1,6 @@
-﻿using PrimeTech.EMS.DAL.Models.Shared.Enums;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Internal;
+using PrimeTech.EMS.DAL.Models.Shared.Enums;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -32,5 +34,7 @@ namespace PrimeTech.EMS.BLL.DataTransferObjects.EmployeeDTOs
         public EmployeeType EmployeeType { get; set; }
         [Display(Name="Department")]
         public int? DepartmentId { get; set; }
+        public IFormFile? Image { get; set; }
+        //public string? ImageUrl { get; set; }
     }
 }

@@ -30,6 +30,7 @@
     <table class="mt-4 table table-striped table-hover">
         <thead class="text-center">
             <tr>
+                <th>@Html.DisplayNameFor(E => E.Image)</th>
                 <th>@Html.DisplayNameFor(E => E.Name)</th>
                 <th>@Html.DisplayNameFor(E => E.EmployeeType)</th>
                 <th>@Html.DisplayNameFor(E => E.Email)</th>
@@ -49,6 +50,9 @@
             @foreach (var employee in Model)
             {
                 <tr>
+                    <td><img src="~/files/imgs/@(employee.Image is not null ? employee.Image : "profile.png")"
+                             class="rounded" width="40" alt="Employee Image" />
+                    </td>
                     <td>@Html.DisplayFor(X => employee.Name)</td>
                     <td>@Html.DisplayFor(X => employee.EmployeeType)</td>
                     <td>@Html.DisplayFor(X => employee.Email)</td>

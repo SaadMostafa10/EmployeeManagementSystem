@@ -4,6 +4,7 @@ using PrimeTech.EMS.BLL.Services.DepartmentServices;
 using PrimeTech.EMS.BLL.Services.EmployeeServices;
 using PrimeTech.EMS.DAL.Models.DepartmentModel;
 using PrimeTech.EMS.DAL.Models.Shared.Enums;
+using PrimeTech.EMS.PL.Models.Employee;
 
 
 
@@ -49,16 +50,32 @@ namespace PrimeTech.EMS.PL.Controllers
             return View();
         }
         [HttpPost]
-        public IActionResult Create(CreatedEmployeeDTO createdEmployeeDTO)
+        public IActionResult Create(EmployeeViewModel employeeVM)
         {
             if (!ModelState.IsValid)  // Server Side Validation
-                return View(createdEmployeeDTO);
+                return View(employeeVM);
 
             var message = string.Empty;
             try
             {
-                
-                
+                var createdEmployeeDTO = new CreatedEmployeeDTO()
+                {
+                    Name = employeeVM.Name,
+                    Address = employeeVM.Address,
+                    Age = employeeVM.Age,
+                    IsActive = employeeVM.IsActive,
+                    Salary = employeeVM.Salary,
+                    Email = employeeVM.Email,
+                    HiringDate = employeeVM.HiringDate,
+                    EmployeeType = employeeVM.EmployeeType,
+                    Gender = employeeVM.Gender,
+                    PhoneNumber = employeeVM.PhoneNumber,
+                    DepartmentId = employeeVM.DepartmentId,
+                    Image = employeeVM.Image,
+                };
+
+
+
 
                 var result = _employeeService.CreateEmployee(createdEmployeeDTO);
                 if (result > 0)
@@ -81,7 +98,7 @@ namespace PrimeTech.EMS.PL.Controllers
                 if (_environment.IsDevelopment())
                 {
                     message = ex.Message;
-                    return View(createdEmployeeDTO);
+                    return View(employeeVM);
                 }
                 else
                 {
@@ -116,7 +133,8 @@ namespace PrimeTech.EMS.PL.Controllers
 
             //ViewData["Departments"] = _departmentService.GetAllDepartments();
 
-            return View(new UpdatedEmployeeDTO()
+            // return View(new UpdatedEmployeeDTO()
+            return View(new EmployeeViewModel()
             {
                 Id = employee.Id,
                 Name =employee.Name,
@@ -135,13 +153,30 @@ namespace PrimeTech.EMS.PL.Controllers
             });
         }
         [HttpPost]
-        public IActionResult Edit([FromRoute]int? id,UpdatedEmployeeDTO employeeDTO)
+        public IActionResult Edit([FromRoute]int? id,EmployeeViewModel employeeVM)
         {
-            if(!id.HasValue || id != employeeDTO.Id )return BadRequest();
-            if(!ModelState.IsValid)return View(employeeDTO);
+            if(!id.HasValue || id != employeeVM.Id )return BadRequest();
+            if(!ModelState.IsValid)return View(employeeVM);
             var message = string.Empty;
             try
             {
+                var employeeDTO = new UpdatedEmployeeDTO()
+                {
+                    //Id = id.Value,
+                    Id = employeeVM.Id,
+                    Name = employeeVM.Name,
+                    Address = employeeVM.Address,
+                    Age = employeeVM.Age,
+                    Salary = employeeVM.Salary,
+                    Email = employeeVM.Email,
+                    HiringDate = employeeVM.HiringDate,
+                    PhoneNumber = employeeVM.PhoneNumber,
+                    IsActive = employeeVM.IsActive,
+                    Gender = employeeVM.Gender,
+                    EmployeeType = employeeVM.EmployeeType,
+                    DepartmentId = employeeVM.DepartmentId,
+                };
+
                 var Result = _employeeService.UpdateEmployee(employeeDTO);
                 if (Result > 0)
                 {
@@ -162,7 +197,7 @@ namespace PrimeTech.EMS.PL.Controllers
                 if (_environment.IsDevelopment())
                 {
                     message = ex.Message;
-                    return View(employeeDTO);
+                    return View(employeeVM);
                 }
                 else
                 {

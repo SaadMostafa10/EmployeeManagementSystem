@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using PrimeTech.EMS.BLL.Common.Services;
 using PrimeTech.EMS.BLL.DataTransferObjects.EmployeeDTOs;
 using PrimeTech.EMS.DAL.Models.EmployeeModel;
 using PrimeTech.EMS.DAL.Persistence.Repositories.EmployeeRepository;
@@ -15,11 +16,14 @@ namespace PrimeTech.EMS.BLL.Services.EmployeeServices
     public class EmployeeService : IEmployeeService
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IAttachmentService _attachmentService;
 
-        public EmployeeService(IUnitOfWork unitOfWork) 
+        public EmployeeService(IUnitOfWork unitOfWork 
+                              ,IAttachmentService attachmentService) 
         // Ask CLR for Creating Object From EmployeeRepository
         {
             _unitOfWork = unitOfWork;
+            _attachmentService = attachmentService;
         }
 
         public IEnumerable<EmployeeToReturnDTO> GetEmployees(string search)
@@ -39,6 +43,7 @@ namespace PrimeTech.EMS.BLL.Services.EmployeeServices
                 Gender = employee.Gender.ToString(),
                 EmployeeType = employee.EmployeeType.ToString(),
                 Department = employee.Department.Name,
+                Image = employee.Image, // To Show Image In Index View
             }).ToList();
             return employees;
                                              
@@ -61,7 +66,8 @@ namespace PrimeTech.EMS.BLL.Services.EmployeeServices
                     HiringDate = employee.HiringDate,
                     Gender = employee.Gender.ToString(),
                     EmployeeType = employee.EmployeeType.ToString(),
-                    Department = employee.Department?.Name ?? "" // Once Access Department [Name]
+                    Department = employee.Department?.Name ?? "" ,// Once Access Department [Name]
+                    Image = employee.Image,  // To Show in Details  string?
                 };
             return null;
         }
@@ -84,8 +90,13 @@ namespace PrimeTech.EMS.BLL.Services.EmployeeServices
                 CreatedBy = 1,  // UserId
                 LastModifiedBy = 1,
                 LastModifiedOn = DateTime.Now,
+                //Image = employeeDTO.Image, 
 
             };
+
+            if (employeeDTO.Image is not null)
+                employee.Image = _attachmentService.Upload(employeeDTO.Image, "imgs");
+
             _unitOfWork.employeeRepository.Add(employee);
             return _unitOfWork.Complete();
         }

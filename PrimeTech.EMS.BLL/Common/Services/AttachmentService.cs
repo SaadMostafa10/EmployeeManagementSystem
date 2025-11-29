@@ -28,7 +28,7 @@ namespace PrimeTech.EMS.BLL.Common.Services
             
             // 3] Get Located Folder Path
 
-            var folderPath = Path.Combine(Directory.GetCurrentDirectory(), "\\wwwroot\\files",folderName);
+            var folderPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\files",folderName);
 
             if (!Directory.Exists(folderPath))
                 Directory.CreateDirectory(folderPath);
@@ -40,7 +40,7 @@ namespace PrimeTech.EMS.BLL.Common.Services
             var filePath = Path.Combine(folderPath, fileName);
 
             // 6] Save File AS Streams =>[Data Per Time]
-            var fileStream = new FileStream(filePath, FileMode.Create);
+            using var fileStream = new FileStream(filePath, FileMode.Create);
 
             // 7] Copy File To FileStream 
             file.CopyTo(fileStream);

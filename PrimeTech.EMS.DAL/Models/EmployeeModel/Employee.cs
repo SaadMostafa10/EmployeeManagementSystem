@@ -28,5 +28,6 @@ namespace PrimeTech.EMS.DAL.Models.EmployeeModel
         public int? DepartmentId { get; set; }
         // Navigational Property [One]
         public virtual Department? Department { get; set; }
+        public string? Image { get; set; }
     }
 }

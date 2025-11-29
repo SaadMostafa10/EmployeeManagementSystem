@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using PrimeTech.EMS.BLL.Common.Services;
 using PrimeTech.EMS.BLL.Mapping;
 using PrimeTech.EMS.BLL.Services.DepartmentServices;
 using PrimeTech.EMS.BLL.Services.EmployeeServices;
@@ -51,7 +52,7 @@ namespace PrimeTech.EMS.PL
 
             builder.Services.AddAutoMapper(E=>E.AddProfile(new MappingProfile()));
 
-
+            builder.Services.AddTransient<IAttachmentService, AttachmentService>();
             #endregion
 
             var app = builder.Build();
