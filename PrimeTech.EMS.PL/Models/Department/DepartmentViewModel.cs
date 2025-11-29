@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace PrimeTech.EMS.PL.Models.Department
 {
-    public class DepartmentEditViewModel
+    public class DepartmentViewModel
     {
         public string Name { get; set; } = null!;
         [Required(ErrorMessage ="Code is Required Ya 500YA )!")]

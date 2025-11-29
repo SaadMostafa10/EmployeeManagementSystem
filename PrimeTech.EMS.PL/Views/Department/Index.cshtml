@@ -1,13 +1,52 @@
 ﻿
+
 @model IEnumerable<DepartmentToReturnDTO>
 @{
     ViewData["Title"] = "Departments";
+    string? Obj = ViewData["Obj"] as string; // Compiler Can Enforce Type Safety ==> Requires Type Conversion
+    
+    string Obj02 = ViewBag.Obj;  // Compiler Can`t Enforce Type Safety at CompilationTime
+
+    // Performance & Type Safety ==> ViewData
+    // Reusability => ViewBag Because Type (var) is Known at RunTime
+
+}
+
+@* <div class="alert alert-info">
+    @ViewData["Message"]
+</div>
+
+<div class="alert alert-info">
+    @ViewBag.Message
+</div>
+ *@
+
+@if (!string.IsNullOrEmpty(@TempData["Message"] as string))
+{
+    <div aria-live="polite" aria-atomic="true"
+         class="toast-container position-fixed p-3"
+         style="bottom: 25px; right: 25px; z-index: 100;">
+
+        <div class="toast fade show" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header">
+                <img src="~/imgs/Success.png" class="rounded me-2" width="30" height="30" alt="fav-icon">
+                <strong class="me-auto text-success">Success!</strong>
+                <small>Just now</small>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+
+            <div class="toast-body">
+                @TempData["Message"]
+            </div>
+        </div>
+    </div>
+
 }
 
 <h1>Departments</h1>
 
-<br/>
-<br/>
+<br />
+<br />
 
 <a asp-controller="Department" asp-action="Create" class="btn btn-primary">Create New Department</a>
 
@@ -35,18 +74,15 @@
                    <td>@department.Code</td>
                    <td>@department.Name</td>
                    <td>@department.CreationDate</td>
+
+
+                   <partial name="_BottonsPartial" model="@department.Id" />
+
                    <td>
-                       <a asp-controller="Department" asp-action="Details" asp-route-id="@department.Id" class="btn btn-warning">
-                            <i class="fa-solid fa-eye"></i> Details
-                       </a>
-                   </td>
-                   <td>
-                       <a asp-controller="Department" asp-action="Edit" asp-route-id="@department.Id" class="btn btn-success">
-                            <i class="fa-solid fa-pen-to-square"></i> Update
-                       </a>
-                   </td>
-                   <td>
-                        @*<a asp-controller="Department" asp-action="Delete" asp-route-id="@department.Id" class="btn btn-danger">
+
+                       
+                    
+                       @*<a asp-controller="Department" asp-action="Delete" asp-route-id="@department.Id" class="btn btn-danger">
                             <i class="fa-solid fa-trash"></i> Delete
                        </a>*@
 
@@ -56,6 +92,8 @@
                    </td>
                     
                 </tr>
+
+                <!-- Modal -->
                 <div class="modal fade" id="DeleteModal-@department.Id" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">

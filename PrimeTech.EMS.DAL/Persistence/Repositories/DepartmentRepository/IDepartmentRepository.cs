@@ -1,4 +1,5 @@
-﻿using PrimeTech.EMS.DAL.Models.Department;
+﻿using PrimeTech.EMS.DAL.Models.DepartmentModel;
+using PrimeTech.EMS.DAL.Persistence.Repositories._Generic;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,14 +8,9 @@ using System.Threading.Tasks;
 
 namespace PrimeTech.EMS.DAL.Persistence.Repositories.DepartmentRepository
 {
-    public interface IDepartmentRepository
+    public interface IDepartmentRepository :IGenericRepository<Department>
     {
-        IEnumerable<Department> GetAll(bool WithAsNoTracking = true);
-        IQueryable<Department> GetAllAsQueryable();
-        Department? Get(int id);
-        int Add(Department entity);
-        int Update(Department entity);
-        int Delete(Department entity);
+        
 
     }
 }
