@@ -10,7 +10,7 @@ namespace PrimeTech.EMS.BLL.Common.Services
     public interface IAttachmentService
     {
         // Upload , Delete
-        string? Upload(IFormFile file,string folderName);
+        Task<string?> UploadAsync(IFormFile file,string folderName);
         bool Delete(string filePath);
     }
 }

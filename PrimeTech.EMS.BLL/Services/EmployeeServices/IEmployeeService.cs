@@ -9,10 +9,10 @@ namespace PrimeTech.EMS.BLL.Services.EmployeeServices
 {
     public interface IEmployeeService
     {
-        IEnumerable<EmployeeToReturnDTO> GetEmployees(string search);
-        EmployeeDetailsToReturnDTO? GetEmployeeById(int id);
-        int CreateEmployee(CreatedEmployeeDTO employeeDTO);
-        int UpdateEmployee(UpdatedEmployeeDTO employeeDTO);
-        bool DeleteEmployee(int id);
+        Task<IEnumerable<EmployeeToReturnDTO>> GetEmployeesAsync(string search);
+        Task<EmployeeDetailsToReturnDTO?> GetEmployeeByIdAsync(int id);
+        Task<int> CreateEmployeeAsync(CreatedEmployeeDTO employeeDTO);
+        Task<int> UpdateEmployeeAsync(UpdatedEmployeeDTO employeeDTO);
+        Task<bool> DeleteEmployeeAsync(int id);
     }
 }

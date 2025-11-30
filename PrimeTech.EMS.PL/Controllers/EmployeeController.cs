@@ -5,6 +5,7 @@ using PrimeTech.EMS.BLL.Services.EmployeeServices;
 using PrimeTech.EMS.DAL.Models.DepartmentModel;
 using PrimeTech.EMS.DAL.Models.Shared.Enums;
 using PrimeTech.EMS.PL.Models.Employee;
+using System.Threading.Tasks;
 
 
 
@@ -35,9 +36,9 @@ namespace PrimeTech.EMS.PL.Controllers
         #region Index
 
         [HttpGet]  //GET : BaseURL/Employee/Index
-        public IActionResult Index(string search)
+        public async Task<IActionResult> Index(string search)
         {
-            var employees = _employeeService.GetEmployees(search);
+            var employees = await _employeeService.GetEmployeesAsync(search);
             return View(employees);
         }
         #endregion
@@ -50,7 +51,7 @@ namespace PrimeTech.EMS.PL.Controllers
             return View();
         }
         [HttpPost]
-        public IActionResult Create(EmployeeViewModel employeeVM)
+        public async Task<IActionResult> Create(EmployeeViewModel employeeVM)
         {
             if (!ModelState.IsValid)  // Server Side Validation
                 return View(employeeVM);
@@ -77,7 +78,7 @@ namespace PrimeTech.EMS.PL.Controllers
 
 
 
-                var result = _employeeService.CreateEmployee(createdEmployeeDTO);
+                var result = await _employeeService.CreateEmployeeAsync(createdEmployeeDTO);
                 if (result > 0)
                     return RedirectToAction(nameof(Index));
 
@@ -113,21 +114,21 @@ namespace PrimeTech.EMS.PL.Controllers
 
         #region Details
         [HttpGet]
-        public IActionResult Details(int? id)
+        public async Task<IActionResult> Details(int? id)
         {
             if(!id.HasValue) return BadRequest();
-            var employee = _employeeService.GetEmployeeById(id.Value);
+            var employee = await _employeeService.GetEmployeeByIdAsync(id.Value);
             return employee is null ? NotFound() :View(employee);
         }
         #endregion
 
         #region Update
         [HttpGet]
-        public IActionResult Edit(int? id)
+        public async Task<IActionResult> Edit(int? id)
         {
             if(!id.HasValue) 
                 return BadRequest();
-            var employee = _employeeService.GetEmployeeById(id.Value);
+            var employee = await _employeeService.GetEmployeeByIdAsync(id.Value);
             if(employee is null) 
                 return NotFound();
 
@@ -153,7 +154,7 @@ namespace PrimeTech.EMS.PL.Controllers
             });
         }
         [HttpPost]
-        public IActionResult Edit([FromRoute]int? id,EmployeeViewModel employeeVM)
+        public async Task<IActionResult> Edit([FromRoute]int? id,EmployeeViewModel employeeVM)
         {
             if(!id.HasValue || id != employeeVM.Id )return BadRequest();
             if(!ModelState.IsValid)return View(employeeVM);
@@ -177,7 +178,7 @@ namespace PrimeTech.EMS.PL.Controllers
                     DepartmentId = employeeVM.DepartmentId,
                 };
 
-                var Result = _employeeService.UpdateEmployee(employeeDTO);
+                var Result = await _employeeService.UpdateEmployeeAsync(employeeDTO);
                 if (Result > 0)
                 {
                     return RedirectToAction(nameof(Index));
@@ -210,11 +211,11 @@ namespace PrimeTech.EMS.PL.Controllers
 
         #region Delete
         [HttpGet] // GET :  BaseURL/Department/Delete/id  // GET => Not Work in Modal You Can Delete it [GET]
-        public IActionResult Delete(int? id)
+        public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
                 return BadRequest(); //400
-            var employee = _employeeService.GetEmployeeById(id.Value);
+            var employee = await _employeeService.GetEmployeeByIdAsync(id.Value);
 
             if (employee == null)
                 return NotFound(); // 404
@@ -222,12 +223,12 @@ namespace PrimeTech.EMS.PL.Controllers
             return View(employee);
         }
         [HttpPost]
-        public IActionResult Delete([FromRoute] int id)
+        public async Task<IActionResult> Delete([FromRoute] int id)
         {
             var message = string.Empty;
             try
             {
-                var deletedEmployee = _employeeService.DeleteEmployee(id);
+                var deletedEmployee = await _employeeService.DeleteEmployeeAsync(id);
                 if (deletedEmployee)
                     return RedirectToAction(nameof(Index));
                 message = "An Error Occured During Deleting This Employee :(";
