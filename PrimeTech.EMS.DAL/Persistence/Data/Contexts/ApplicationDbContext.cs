@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using PrimeTech.EMS.DAL.Models.DepartmentModel;
 using PrimeTech.EMS.DAL.Models.EmployeeModel;
 using System;
@@ -14,7 +15,7 @@ namespace PrimeTech.EMS.DAL.Persistance.Data.Contexts
     // Department Repo => Create Object From AppDbContext To Open Connection With DB
     // Employee   Repo => Create Object From AppDbContext To Open another Connection With DB
 
-    public class ApplicationDbContext:DbContext
+    public class ApplicationDbContext:IdentityDbContext
     {
         
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options):base(options)
@@ -23,6 +24,7 @@ namespace PrimeTech.EMS.DAL.Persistance.Data.Contexts
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
             // Apply All Configurations Classes // Fluent API
         }
