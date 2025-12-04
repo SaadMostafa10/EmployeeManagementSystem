@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using PrimeTech.EMS.BLL.Common.Services;
@@ -5,6 +6,7 @@ using PrimeTech.EMS.BLL.Mapping;
 using PrimeTech.EMS.BLL.Services.DepartmentServices;
 using PrimeTech.EMS.BLL.Services.EmployeeServices;
 using PrimeTech.EMS.DAL.Models.DepartmentModel;
+using PrimeTech.EMS.DAL.Models.Identity;
 using PrimeTech.EMS.DAL.Persistance.Data.Contexts;
 using PrimeTech.EMS.DAL.Persistence.Repositories.DepartmentRepository;
 using PrimeTech.EMS.DAL.Persistence.Repositories.EmployeeRepository;
@@ -53,6 +55,25 @@ namespace PrimeTech.EMS.PL
             builder.Services.AddAutoMapper(E=>E.AddProfile(new MappingProfile()));
 
             builder.Services.AddTransient<IAttachmentService, AttachmentService>();
+            
+            builder.Services.AddAuthentication(); // Add => {User SigIn Role} Manager
+            
+            builder.Services.AddIdentity<ApplicationUser, IdentityRole>((options) =>
+            {
+                options.Password.RequiredLength = 5;
+                options.Password.RequireUppercase = true;
+                options.Password.RequireLowercase = true;
+                options.Password.RequireNonAlphanumeric = true; // # @ $
+                options.Password.RequireDigit = true;
+                options.Password.RequiredUniqueChars = 1;
+
+                options.User.RequireUniqueEmail = true;
+
+                options.Lockout.AllowedForNewUsers = true;
+                options.Lockout.MaxFailedAccessAttempts = 5;
+                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromDays(5);
+            })
+                .AddEntityFrameworkStores<ApplicationDbContext>();
             #endregion
 
             var app = builder.Build();
@@ -76,7 +97,7 @@ namespace PrimeTech.EMS.PL
 
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}");
+                pattern: "{controller=Account}/{action=Register}/{id?}");
 
             app.Run();
         }

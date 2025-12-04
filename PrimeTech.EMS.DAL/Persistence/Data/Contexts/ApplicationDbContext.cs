@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using PrimeTech.EMS.DAL.Models.DepartmentModel;
 using PrimeTech.EMS.DAL.Models.EmployeeModel;
+using PrimeTech.EMS.DAL.Models.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,7 +16,7 @@ namespace PrimeTech.EMS.DAL.Persistance.Data.Contexts
     // Department Repo => Create Object From AppDbContext To Open Connection With DB
     // Employee   Repo => Create Object From AppDbContext To Open another Connection With DB
 
-    public class ApplicationDbContext:IdentityDbContext
+    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options):base(options)
