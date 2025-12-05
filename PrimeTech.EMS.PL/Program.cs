@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -55,9 +56,15 @@ namespace PrimeTech.EMS.PL
             builder.Services.AddAutoMapper(E=>E.AddProfile(new MappingProfile()));
 
             builder.Services.AddTransient<IAttachmentService, AttachmentService>();
-            
-            builder.Services.AddAuthentication(); // Add => {User SigIn Role} Manager
-            
+
+            builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie(options =>
+                {
+                    options.LoginPath = "/Account/LogIn";
+                    options.AccessDeniedPath = "/Home/Error";
+                    options.LogoutPath = "/Account/LogIn";
+                }); // Add => {User SigIn Role} Manager <= AddAuthentication()
+
             builder.Services.AddIdentity<ApplicationUser, IdentityRole>((options) =>
             {
                 options.Password.RequiredLength = 5;
@@ -73,7 +80,11 @@ namespace PrimeTech.EMS.PL
                 options.Lockout.MaxFailedAccessAttempts = 5;
                 options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromDays(5);
             })
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddDefaultTokenProviders();  // PasswordSignInAsync() Depend on AddDefaultTokenProviders() Service
+            
+            
+            
             #endregion
 
             var app = builder.Build();
@@ -93,6 +104,7 @@ namespace PrimeTech.EMS.PL
 
             app.UseRouting();
 
+            app.UseAuthorization();
             app.UseAuthorization();
 
             app.MapControllerRoute(

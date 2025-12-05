@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using PrimeTech.EMS.BLL.DataTransferObjects.EmployeeDTOs;
 using PrimeTech.EMS.BLL.Services.DepartmentServices;
 using PrimeTech.EMS.BLL.Services.EmployeeServices;
@@ -12,6 +13,7 @@ using System.Threading.Tasks;
 
 namespace PrimeTech.EMS.PL.Controllers
 {
+    [Authorize]
     public class EmployeeController : Controller
     {
         #region Services

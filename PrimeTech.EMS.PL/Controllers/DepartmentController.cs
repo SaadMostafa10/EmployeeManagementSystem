@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PrimeTech.EMS.BLL.DataTransferObjects.DepartmentDTOs;
 using PrimeTech.EMS.BLL.Services.DepartmentServices;
@@ -11,6 +12,7 @@ namespace PrimeTech.EMS.PL.Controllers
     // DepartmentController Has 2 Relationships
     // 1.Inheritance : DepartmentController Is a Controller
     // 2.Assosiation[Composition] : DepartmentController Has a IDepartmentServices
+    [Authorize]
     public class DepartmentController : Controller
     {
         #region Services
