@@ -124,6 +124,15 @@ namespace PrimeTech.EMS.PL.Controllers
         }
         #endregion
 
+        #region SignOut
+        [HttpGet]
+        public async new Task<IActionResult> SignOut()
+        {
+            // Delete Token
+            await _signInManager.SignOutAsync();
+            return RedirectToAction(nameof(LogIn));
+        }
+        #endregion
     }
 }
 
