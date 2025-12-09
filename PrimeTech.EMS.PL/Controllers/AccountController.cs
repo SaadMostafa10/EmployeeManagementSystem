@@ -1,8 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using PrimeTech.EMS.DAL.Models.Identity;
+using PrimeTech.EMS.DAL.Models.Shared;
 using PrimeTech.EMS.PL.Models.Identity;
+using System.Security.Policy;
 using System.Threading.Tasks;
 
 namespace PrimeTech.EMS.PL.Controllers
@@ -110,10 +113,10 @@ namespace PrimeTech.EMS.PL.Controllers
                     if (Result.IsLockedOut)
                         ModelState.AddModelError("", "Your Account Is Locked");
 
-                    if (Result.Succeeded) 
+                    if (Result.Succeeded)
                         return RedirectToAction(nameof(HomeController.Index), "Home");
                 }
-                    
+
 
             }
 
@@ -133,6 +136,42 @@ namespace PrimeTech.EMS.PL.Controllers
             return RedirectToAction(nameof(LogIn));
         }
         #endregion
+
+        #region ForgetPassword
+        [HttpGet]
+        public IActionResult ForgetPassword() => View(); // Return Form With One Input Field [Email]
+       
+        [HttpPost]
+        public async Task<IActionResult> SendResetPasswordUrl(ForgetPasswordViewModel forgetPasswordViewModel)
+        {
+            // ForgetPassword => Hamada@gmail.com [User Not Exist]
+            if (ModelState.IsValid)
+            {
+                // 1] Check user is exist
+                var user = await _userManager.FindByEmailAsync(forgetPasswordViewModel.Email);
+
+                // BaseUrl/Account/ResetPassword?Email=saad@gmail.com&Token=vaqjfkaswf172bsk0
+                var token = _userManager.GeneratePasswordResetTokenAsync(user);
+                if(user is not  null)  //=> Send Email => To , Subject , Body
+                {
+                    var url = Url.Action("ResetPassword", "Account", new { forgetPasswordViewModel.Email ,token = token }, Request.Scheme);
+                    var email = new Email()
+                    {
+                        To = forgetPasswordViewModel.Email,
+                        Subject = "Reset Your Password",
+                        // BaseUrl/Account/ResetPassword?Email=saad@gmail.com
+                        Body = url // ==> go to ResetPassword [Form] contain New Password - Confirm New Password
+                    };
+                    // UserDefinedDataType [Email] => To string , Subject string , Body string
+                  
+
+                }
+            
+            }
+        }
+
+        #endregion
     }
+
 }
 
