@@ -144,7 +144,7 @@ namespace PrimeTech.EMS.PL.Controllers
         #region ForgetPassword
         [HttpGet]
         public IActionResult ForgetPassword() => View(); // Return Form With One Input Field [Email]
-       
+
         [HttpPost]
         public async Task<IActionResult> SendResetPasswordUrl(ForgetPasswordViewModel forgetPasswordViewModel)
         {
@@ -180,9 +180,46 @@ namespace PrimeTech.EMS.PL.Controllers
 
         [HttpGet]
         public IActionResult CheckYourInbox() => View();
-        
-        #endregion
-    }
 
+        #endregion
+
+        #region Reset Password
+        [HttpGet]
+        public IActionResult ResetPassword(string email, string token)
+        {
+            TempData["email"] = email;
+            TempData["token"] = token;
+            return View();
+            // Pass email , token
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ResetPassword(ResetPasswordViewModel resetPasswordViewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                // 1] check user [email] is exist
+                var email = TempData["email"] as string;
+                var token = TempData["token"] as string;
+                var user = await _userManager.FindByEmailAsync(email);
+                if (user != null)
+                {
+                    var result = await _userManager.ResetPasswordAsync(user, token,resetPasswordViewModel.NewPassword);
+                    if (result.Succeeded)
+                    {
+                        return RedirectToAction(nameof(LogIn));
+                    }
+
+
+                }
+                
+            }
+            ModelState.AddModelError("", "Invalid Operation , Please Try Again ");
+            return View(resetPasswordViewModel);
+
+            #endregion
+        }
+
+    }
 }
 
