@@ -2,7 +2,8 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using PrimeTech.EMS.BLL.Common.Services;
+using PrimeTech.EMS.BLL.Common.Services.AttachmentService;
+using PrimeTech.EMS.BLL.Common.Services.EmailSender;
 using PrimeTech.EMS.BLL.Mapping;
 using PrimeTech.EMS.BLL.Services.DepartmentServices;
 using PrimeTech.EMS.BLL.Services.EmployeeServices;
@@ -57,6 +58,8 @@ namespace PrimeTech.EMS.PL
 
             builder.Services.AddTransient<IAttachmentService, AttachmentService>();
 
+            builder.Services.AddScoped<IEmailSender, EmailSender>();
+
             builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(options =>
                 {
@@ -82,7 +85,7 @@ namespace PrimeTech.EMS.PL
             })
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();  // PasswordSignInAsync() Depend on AddDefaultTokenProviders() Service
-            
+                // Generate Token Reset Password 
             
             
             #endregion

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using PrimeTech.EMS.BLL.Common.Services.EmailSender;
 using PrimeTech.EMS.DAL.Models.Identity;
 using PrimeTech.EMS.DAL.Models.Shared;
 using PrimeTech.EMS.PL.Models.Identity;
@@ -15,17 +16,20 @@ namespace PrimeTech.EMS.PL.Controllers
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly IEmailSender _emailSender;
 
         public AccountController(
             UserManager<ApplicationUser> userManager,
-            SignInManager<ApplicationUser> signInManager
+            SignInManager<ApplicationUser> signInManager,
+            IEmailSender emailSender
             )
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _emailSender = emailSender;
         }
 
-        // SignUp(Register) , SignIn(LogIn) , SignOut ...
+        // SignUp(Register) , SignIn(LogIn) , SignOut , Reset Password
 
         #region Sign Up
         [HttpGet]
@@ -149,12 +153,12 @@ namespace PrimeTech.EMS.PL.Controllers
             {
                 // 1] Check user is exist
                 var user = await _userManager.FindByEmailAsync(forgetPasswordViewModel.Email);
-
-                // BaseUrl/Account/ResetPassword?Email=saad@gmail.com&Token=vaqjfkaswf172bsk0
-                var token = _userManager.GeneratePasswordResetTokenAsync(user);
-                if(user is not  null)  //=> Send Email => To , Subject , Body
+                if (user is not null)  //=> Send Email => To , Subject , Body
                 {
-                    var url = Url.Action("ResetPassword", "Account", new { forgetPasswordViewModel.Email ,token = token }, Request.Scheme);
+                    // BaseUrl/Account/ResetPassword?Email=saad@gmail.com&Token=vaqjfkaswf172bsk0
+                    var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+
+                    var url = Url.Action("ResetPassword", "Account", new { forgetPasswordViewModel.Email, token = token }, Request.Scheme);
                     var email = new Email()
                     {
                         To = forgetPasswordViewModel.Email,
@@ -162,14 +166,21 @@ namespace PrimeTech.EMS.PL.Controllers
                         // BaseUrl/Account/ResetPassword?Email=saad@gmail.com
                         Body = url // ==> go to ResetPassword [Form] contain New Password - Confirm New Password
                     };
+                    // SendEmail
+                    _emailSender.SendEmail(email);
+                    return RedirectToAction("CheckYourInbox");
                     // UserDefinedDataType [Email] => To string , Subject string , Body string
-                  
 
                 }
-            
+                else
+                    ModelState.AddModelError("", "Invalid Operation Please Try Again");
             }
+            return View(forgetPasswordViewModel); // -> [Form] not exist Email
         }
 
+        [HttpGet]
+        public IActionResult CheckYourInbox() => View();
+        
         #endregion
     }
 

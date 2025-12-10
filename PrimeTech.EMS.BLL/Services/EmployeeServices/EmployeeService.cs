@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using PrimeTech.EMS.BLL.Common.Services;
+using PrimeTech.EMS.BLL.Common.Services.AttachmentService;
 using PrimeTech.EMS.BLL.DataTransferObjects.EmployeeDTOs;
 using PrimeTech.EMS.DAL.Models.EmployeeModel;
 using PrimeTech.EMS.DAL.Persistence.Repositories.EmployeeRepository;

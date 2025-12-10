@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PrimeTech.EMS.BLL.Common.Services
+namespace PrimeTech.EMS.BLL.Common.Services.AttachmentService
 {
     public class AttachmentService : IAttachmentService
     {
