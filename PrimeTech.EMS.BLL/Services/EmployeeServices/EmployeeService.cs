@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using PrimeTech.EMS.BLL.Common.Services;
+using PrimeTech.EMS.BLL.Common.Services.AttachmentService;
 using PrimeTech.EMS.BLL.DataTransferObjects.EmployeeDTOs;
 using PrimeTech.EMS.DAL.Models.EmployeeModel;
 using PrimeTech.EMS.DAL.Persistence.Repositories.EmployeeRepository;
@@ -26,7 +26,7 @@ namespace PrimeTech.EMS.BLL.Services.EmployeeServices
             _attachmentService = attachmentService;
         }
 
-        public IEnumerable<EmployeeToReturnDTO> GetEmployees(string search)
+        public async Task<IEnumerable<EmployeeToReturnDTO>> GetEmployeesAsync(string search)
         {
             var employees = _unitOfWork.employeeRepository
             .GetIQueryable()
@@ -44,14 +44,14 @@ namespace PrimeTech.EMS.BLL.Services.EmployeeServices
                 EmployeeType = employee.EmployeeType.ToString(),
                 Department = employee.Department.Name,
                 Image = employee.Image, // To Show Image In Index View
-            }).ToList();
-            return employees;
+            }).ToListAsync();
+            return await employees;
                                              
         }
 
-        public EmployeeDetailsToReturnDTO? GetEmployeeById(int id)
+        public async Task<EmployeeDetailsToReturnDTO?> GetEmployeeByIdAsync(int id)
         {
-            var employee = _unitOfWork.employeeRepository.Get(id);
+            var employee = await _unitOfWork.employeeRepository.GetAsync(id);
             if (employee != null)
                 return new EmployeeDetailsToReturnDTO()
                 {
@@ -72,7 +72,7 @@ namespace PrimeTech.EMS.BLL.Services.EmployeeServices
             return null;
         }
 
-        public int CreateEmployee(CreatedEmployeeDTO employeeDTO)
+        public async Task<int> CreateEmployeeAsync(CreatedEmployeeDTO employeeDTO)
         {
             var employee = new Employee()
             {
@@ -95,13 +95,13 @@ namespace PrimeTech.EMS.BLL.Services.EmployeeServices
             };
 
             if (employeeDTO.Image is not null)
-                employee.Image = _attachmentService.Upload(employeeDTO.Image, "imgs");
+                employee.Image = await _attachmentService.UploadAsync(employeeDTO.Image, "imgs");
 
             _unitOfWork.employeeRepository.Add(employee);
-            return _unitOfWork.Complete();
+            return await _unitOfWork.CompleteAsync();
         }
 
-        public int UpdateEmployee(UpdatedEmployeeDTO employeeDTO)
+        public async Task<int> UpdateEmployeeAsync(UpdatedEmployeeDTO employeeDTO)
         {
             var employee = new Employee()
             {
@@ -123,17 +123,17 @@ namespace PrimeTech.EMS.BLL.Services.EmployeeServices
 
             };
             _unitOfWork.employeeRepository.Update(employee);
-            return _unitOfWork.Complete();
+            return await _unitOfWork.CompleteAsync();
 
         }
 
-        public bool DeleteEmployee(int id)
+        public async Task<bool> DeleteEmployeeAsync(int id)
         {
             var employeeRepo = _unitOfWork.employeeRepository;
-            var employee = employeeRepo.Get(id);
+            var employee = await employeeRepo.GetAsync(id);
             if (employee != null)
                  employeeRepo.Delete(employee);
-            return _unitOfWork.Complete() > 0;
+            return await _unitOfWork.CompleteAsync() > 0;
 
         }
 

@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace PrimeTech.EMS.DAL.Persistence.UnitOfWork
 {
-    public interface IUnitOfWork : IDisposable
+    public interface IUnitOfWork : IAsyncDisposable
     {
         public IDepartmentRepository departmentRepository { get; }
         public IEmployeeRepository employeeRepository { get; }
-        int Complete();
+        Task<int> CompleteAsync();
         
     }
 }

@@ -18,12 +18,12 @@ namespace PrimeTech.EMS.DAL.Persistence.Repositories._Generic
         {
             _dbContext = dbContext;
         }
-        public IEnumerable<TEntity> GetAll(bool WithAsNoTracking = true)
+        public async Task<IEnumerable<TEntity>> GetAllAsync(bool WithAsNoTracking = true)
         {
             if (WithAsNoTracking)
-                return _dbContext.Set<TEntity>().AsNoTracking().ToList();
+                return await _dbContext.Set<TEntity>().AsNoTracking().ToListAsync();
 
-            return _dbContext.Set<TEntity>().ToList();
+            return await _dbContext.Set<TEntity>().ToListAsync();
         }
         // Question not Understand
         public IQueryable<TEntity> GetIQueryable()
@@ -35,9 +35,9 @@ namespace PrimeTech.EMS.DAL.Persistence.Repositories._Generic
         {
             return _dbContext.Set<TEntity>();
         }
-        public TEntity? Get(int id)
+        public async Task<TEntity?> GetAsync(int id)
         {
-            return _dbContext.Set<TEntity>().Find(id);
+            return await _dbContext.Set<TEntity>().FindAsync(id);
             // var TEntity = _dbContext.Departments.Local.FirstOrDefault(D => D.Id == id);
             // if (TEntity == null)
             //     TEntity = _dbContext.Departments.FirstOrDefault(D => D.Id == id);

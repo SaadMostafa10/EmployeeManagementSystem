@@ -1,10 +1,14 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using PrimeTech.EMS.BLL.Common.Services;
+using PrimeTech.EMS.BLL.Common.Services.AttachmentService;
+using PrimeTech.EMS.BLL.Common.Services.EmailSender;
 using PrimeTech.EMS.BLL.Mapping;
 using PrimeTech.EMS.BLL.Services.DepartmentServices;
 using PrimeTech.EMS.BLL.Services.EmployeeServices;
 using PrimeTech.EMS.DAL.Models.DepartmentModel;
+using PrimeTech.EMS.DAL.Models.Identity;
 using PrimeTech.EMS.DAL.Persistance.Data.Contexts;
 using PrimeTech.EMS.DAL.Persistence.Repositories.DepartmentRepository;
 using PrimeTech.EMS.DAL.Persistence.Repositories.EmployeeRepository;
@@ -53,6 +57,37 @@ namespace PrimeTech.EMS.PL
             builder.Services.AddAutoMapper(E=>E.AddProfile(new MappingProfile()));
 
             builder.Services.AddTransient<IAttachmentService, AttachmentService>();
+
+            builder.Services.AddScoped<IEmailSender, EmailSender>();
+
+            builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie(options =>
+                {
+                    options.LoginPath = "/Account/LogIn";
+                    options.AccessDeniedPath = "/Home/Error";
+                    options.LogoutPath = "/Account/LogIn";
+                }); // Add => {User SigIn Role} Manager <= AddAuthentication()
+
+            builder.Services.AddIdentity<ApplicationUser, IdentityRole>((options) =>
+            {
+                options.Password.RequiredLength = 5;
+                options.Password.RequireUppercase = true;
+                options.Password.RequireLowercase = true;
+                options.Password.RequireNonAlphanumeric = true; // # @ $
+                options.Password.RequireDigit = true;
+                options.Password.RequiredUniqueChars = 1;
+
+                options.User.RequireUniqueEmail = true;
+
+                options.Lockout.AllowedForNewUsers = true;
+                options.Lockout.MaxFailedAccessAttempts = 5;
+                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromDays(5);
+            })
+                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddDefaultTokenProviders();  // PasswordSignInAsync() Depend on AddDefaultTokenProviders() Service
+                // Generate Token Reset Password 
+            
+            
             #endregion
 
             var app = builder.Build();
@@ -73,10 +108,11 @@ namespace PrimeTech.EMS.PL
             app.UseRouting();
 
             app.UseAuthorization();
+            app.UseAuthorization();
 
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}");
+                pattern: "{controller=Account}/{action=Register}/{id?}");
 
             app.Run();
         }

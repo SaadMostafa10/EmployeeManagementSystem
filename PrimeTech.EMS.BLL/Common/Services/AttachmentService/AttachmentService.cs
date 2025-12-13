@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PrimeTech.EMS.BLL.Common.Services
+namespace PrimeTech.EMS.BLL.Common.Services.AttachmentService
 {
     public class AttachmentService : IAttachmentService
     {
@@ -15,7 +15,7 @@ namespace PrimeTech.EMS.BLL.Common.Services
         // Allowed MAX SIZE => 2 MB 
         public const int _allowedMaxSize = 2_097_152;
 
-        public string? Upload(IFormFile file, string folderName)
+        public async Task<string?> UploadAsync(IFormFile file, string folderName)
         {
             // 1] Validation For Type Extentions => { ".png", ".jpg", ".jpeg" } 
             var extention = Path.GetExtension(file.FileName); // Saad.png
@@ -43,7 +43,7 @@ namespace PrimeTech.EMS.BLL.Common.Services
             using var fileStream = new FileStream(filePath, FileMode.Create);
 
             // 7] Copy File To FileStream 
-            file.CopyTo(fileStream);
+            await file.CopyToAsync(fileStream);
 
             // 8] Return FileName => that store in DB
             return fileName;

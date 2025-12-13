@@ -9,10 +9,10 @@ namespace PrimeTech.EMS.BLL.Services.DepartmentServices
 {
     public interface IDepartmentServices
     {
-        IEnumerable<DepartmentToReturnDTO> GetAllDepartments();
-        DepartmentDetailsToReturnDTO? GetDepartmentById(int id);
-        int CreateDepartment(CreatedDepartmentDTO departmentDTO);
-        int UpdateDepartment(UpdatedDepartmentDTO departmentDTO);
-        bool DeleteDepartment(int id);
+        Task<IEnumerable<DepartmentToReturnDTO>> GetAllDepartmentsAsync();
+        Task<DepartmentDetailsToReturnDTO?> GetDepartmentByIdAsync(int id);
+        Task<int> CreateDepartmentAsync(CreatedDepartmentDTO departmentDTO);
+        Task<int> UpdateDepartmentAsync(UpdatedDepartmentDTO departmentDTO);
+        Task<bool> DeleteDepartmentAsync(int id);
     }
 }

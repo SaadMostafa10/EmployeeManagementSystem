@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using PrimeTech.EMS.BLL.DataTransferObjects.DepartmentDTOs;
 using PrimeTech.EMS.DAL.Models.DepartmentModel;
 using PrimeTech.EMS.DAL.Persistence.Repositories.DepartmentRepository;
@@ -24,7 +25,7 @@ namespace PrimeTech.EMS.BLL.Services.DepartmentServices
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
-        public IEnumerable<DepartmentToReturnDTO> GetAllDepartments()
+        public async Task<IEnumerable<DepartmentToReturnDTO>> GetAllDepartmentsAsync()
         {
 
             // Convert Department To=> DepartmentToReturnDTO
@@ -41,12 +42,12 @@ namespace PrimeTech.EMS.BLL.Services.DepartmentServices
                 //return departments;
             
             // Best practice مع AutoMapper
-            return _mapper.ProjectTo<DepartmentToReturnDTO>(departments).ToList();
+            return await _mapper.ProjectTo<DepartmentToReturnDTO>(departments).AsNoTracking().ToListAsync();
              
         }
-        public DepartmentDetailsToReturnDTO? GetDepartmentById(int id)
+        public async Task<DepartmentDetailsToReturnDTO?> GetDepartmentByIdAsync(int id)
         {
-            var department = _unitOfWork.departmentRepository.Get(id);
+            var department = await _unitOfWork.departmentRepository.GetAsync(id);
             if (department is { })
             {
                 var departmentDetails = _mapper.Map<Department, DepartmentDetailsToReturnDTO>(department);
@@ -58,7 +59,7 @@ namespace PrimeTech.EMS.BLL.Services.DepartmentServices
                 ///    Id = department.Id,
                 ///    Name = department.Name,
                 ///    Code = department.Code,
-                ///    Description = department.Description,
+                ///    Description = department. Description,
                 ///    CreatedBy = department.CreatedBy,
                 ///    CreatedOn = department.CreatedOn,
                 ///    LastModifiedBy = department.LastModifiedBy,
@@ -69,7 +70,7 @@ namespace PrimeTech.EMS.BLL.Services.DepartmentServices
             }
             return null;
         }
-        public int CreateDepartment(CreatedDepartmentDTO departmentDTO)
+        public async Task<int> CreateDepartmentAsync(CreatedDepartmentDTO departmentDTO)
         {
             // CreatedDepartmentDTO => Department [Post] => Submit
 
@@ -93,9 +94,9 @@ namespace PrimeTech.EMS.BLL.Services.DepartmentServices
             ///};
 
             _unitOfWork.departmentRepository.Add(department);
-            return _unitOfWork.Complete();
+            return await _unitOfWork.CompleteAsync();
         }
-        public int UpdateDepartment(UpdatedDepartmentDTO departmentDTO)
+        public async Task<int> UpdateDepartmentAsync(UpdatedDepartmentDTO departmentDTO)
         {
             // جلب الـ entity من DB
             // var department = _departmentRepository.Get(departmentDTO.Id);
@@ -121,15 +122,15 @@ namespace PrimeTech.EMS.BLL.Services.DepartmentServices
             ///};
            
             _unitOfWork.departmentRepository.Update(department);
-            return _unitOfWork.Complete();
+            return await _unitOfWork.CompleteAsync();
         }
-        public bool DeleteDepartment(int id)
+        public async Task<bool> DeleteDepartmentAsync(int id)
         {
             var departmentRepo = _unitOfWork.departmentRepository;
-            var department = departmentRepo.Get(id);
+            var department = await departmentRepo.GetAsync(id);
             if (department != null)
                  departmentRepo.Delete(department);
-            return _unitOfWork.Complete() > 0;
+            return await  _unitOfWork.CompleteAsync() > 0;
         }
 
         

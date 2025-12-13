@@ -65,7 +65,7 @@
                     <td>@Html.DisplayFor(X => employee.Gender)</td>
 
 
-                    <partial name="_BottonsPartial" model="@employee.Id" />
+                    <partial name="_BottonsPartial" model="@employee.Id.ToString()" />
 
                     <td>
                         <a asp-action="Delete" asp-route-id="@employee.Id" class="btn btn-danger">
