@@ -100,7 +100,7 @@ namespace PrimeTech.EMS.PL.Controllers
                 user.Email = userViewModel.Email;
                 var result = await _userManager.UpdateAsync(user);
                 if (result.Succeeded)
-                    RedirectToAction(nameof(Index));
+                    return RedirectToAction(nameof(Index));
                 else
                 {
                     message = "User Can't be Updated";
