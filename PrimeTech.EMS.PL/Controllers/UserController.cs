@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace PrimeTech.EMS.PL.Controllers
 {
-    [Authorize(Roles ="Admin")]
+    [Authorize/*(Roles ="Admin")*/]
     public class UserController(
         UserManager<ApplicationUser> userManager ,
         IWebHostEnvironment environment )

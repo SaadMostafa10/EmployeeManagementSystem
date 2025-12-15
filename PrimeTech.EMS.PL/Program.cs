@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Authentication.Cookies;
+﻿using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -68,11 +68,11 @@ namespace PrimeTech.EMS.PL
             //        options.LogoutPath = "/Account/LogOut";
             //    }); // Add => {User SigIn Role} Manager <= AddAuthentication()
 
-            // ??? ????? ???? ?????? ???????? ?????? ?? Identity
+            
             builder.Services.ConfigureApplicationCookie(config =>
             {
                 config.LoginPath = "/Account/LogIn";
-                config.AccessDeniedPath = "/Home/Error"; // ?????? ??? ???????
+                config.AccessDeniedPath = "/Home/Error"; 
                 config.LogoutPath = "/Account/LogOut";
             });
 
@@ -104,6 +104,7 @@ namespace PrimeTech.EMS.PL
             if (!app.Environment.IsDevelopment())
             {
                 app.UseExceptionHandler("/Home/Error");
+                //app.UseDeveloperExceptionPage(); // عشان تشوف الأخطاء الحقيقية على السيرفر
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }

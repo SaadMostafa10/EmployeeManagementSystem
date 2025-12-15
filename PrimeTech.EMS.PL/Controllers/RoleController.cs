@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace PrimeTech.EMS.PL.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    [Authorize/*(Roles = "Admin")*/]
     public class RoleController(
        RoleManager<IdentityRole> roleManager,
        UserManager<ApplicationUser> userManager,
