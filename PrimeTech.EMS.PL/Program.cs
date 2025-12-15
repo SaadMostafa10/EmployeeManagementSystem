@@ -60,13 +60,21 @@ namespace PrimeTech.EMS.PL
 
             builder.Services.AddScoped<IEmailSender, EmailSender>();
 
-            builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-                .AddCookie(options =>
-                {
-                    options.LoginPath = "/Account/LogIn";
-                    options.AccessDeniedPath = "/Home/Error";
-                    options.LogoutPath = "/Account/LogOut";
-                }); // Add => {User SigIn Role} Manager <= AddAuthentication()
+            //builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+            //    .AddCookie(options =>
+            //    {
+            //        options.LoginPath = "/Account/LogIn";
+            //        options.AccessDeniedPath = "/Home/Error";
+            //        options.LogoutPath = "/Account/LogOut";
+            //    }); // Add => {User SigIn Role} Manager <= AddAuthentication()
+
+            // ??? ????? ???? ?????? ???????? ?????? ?? Identity
+            builder.Services.ConfigureApplicationCookie(config =>
+            {
+                config.LoginPath = "/Account/LogIn";
+                config.AccessDeniedPath = "/Home/Error"; // ?????? ??? ???????
+                config.LogoutPath = "/Account/LogOut";
+            });
 
             builder.Services.AddIdentity<ApplicationUser, IdentityRole>((options) =>
             {
@@ -107,7 +115,7 @@ namespace PrimeTech.EMS.PL
 
             app.UseRouting();
 
-            app.UseAuthorization();
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapControllerRoute(
