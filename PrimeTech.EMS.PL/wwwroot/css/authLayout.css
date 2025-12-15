@@ -1,0 +1,372 @@
+﻿/*-- Reset & Basics --*/
+html, body, div, span, h1, form, input, p, ul, li, label {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-family: 'Roboto', sans-serif;
+    box-sizing: border-box;
+}
+
+body {
+    /* 1. بنحط 4 ألوان جنب بعض */
+    background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+    /* 2. بنكبر حجم الخلفية جداً عشان نعرف نحركها */
+    background-size: 400% 400%;
+    /* 3. أمر الحركة: اسم الانيميشن والوقت والتكرار */
+    animation: gradientBG 15s ease infinite;
+    /* باقي التنسيقات عشان التوسط */
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ده تعريف الحركة نفسها */
+@keyframes gradientBG {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+/*-- Main Container --*/
+.main-w3layouts {
+    width: 100%;
+    position: relative;
+    z-index: 1;
+}
+
+h1 {
+    font-size: 3em;
+    text-align: center;
+    color: #fff;
+    font-weight: 300;
+    margin-bottom: 20px;
+    text-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+/*-- Form Card (Glass Effect) --*/
+.main-agileinfo {
+    width: 35%;
+    margin: 0 auto;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+    padding: 3em;
+}
+
+/*-- Inputs Styling --*/
+input[type="text"], input[type="email"], input[type="password"] {
+    font-size: 0.9em;
+    color: #fff;
+    font-weight: 300;
+    width: 100%;
+    display: block;
+    border: none;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 30px;
+    background: rgba(0, 0, 0, 0.2);
+    outline: none;
+    transition: 0.3s;
+}
+
+    input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focus {
+        background: rgba(0, 0, 0, 0.4);
+        transform: scale(1.02);
+        border: 1px solid rgba(255,255,255,0.5);
+    }
+
+::placeholder {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+/*-- Submit Button --*/
+input[type="submit"] {
+    font-size: 1em;
+    color: #764ba2;
+    background: #fff;
+    outline: none;
+    border: none;
+    cursor: pointer;
+    padding: 12px;
+    width: 100%;
+    margin: 2em 0;
+    letter-spacing: 2px;
+    border-radius: 30px;
+    font-weight: bold;
+    transition: 0.4s all;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+    input[type="submit"]:hover {
+        background: #667eea;
+        color: #fff;
+        transform: translateY(-3px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+    }
+
+/* ==================================================
+   إصلاح نهائي لمحاذاة الشروط (Checkbox) لليسار
+   ================================================== */
+
+/* 1. الحاوية الرئيسية: تأخذ العرض كامل والمحاذاة يسار */
+.wthree-text {
+    width: 100% !important;
+    text-align: left !important;
+    display: block !important;
+    margin-bottom: 15px !important;
+}
+
+    /* 2. الـ Label: هو اللي بيمسك المربع والكلام */
+    .wthree-text label {
+        display: flex !important; /* نظام المرونة */
+        justify-content: flex-start !important; /* تجميع العناصر في البداية (اليسار) */
+        align-items: center !important; /* محاذاة رأسية في المنتصف */
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    /* 3. المربع نفسه (Checkbox) */
+    .wthree-text input.checkbox {
+        width: 16px !important;
+        height: 16px !important;
+        margin: 0 10px 0 0 !important; /* مسافة 10 بيكسل يمين المربع فقط */
+        padding: 0 !important;
+        float: none !important; /* إلغاء أي طفو قديم */
+        display: inline-block !important;
+        cursor: pointer;
+    }
+
+    /* 4. الكلام (I Agree...) */
+    .wthree-text span,
+    .wthree-text label span {
+        text-align: left !important;
+        float: none !important; /* إلغاء طفو الكلام لليمين */
+        width: auto !important; /* ياخد مساحته بس */
+        font-size: 0.85em !important;
+        font-weight: 400 !important;
+        color: #fff !important;
+    }
+
+/* 5. إخفاء أي فواصل قديمة (زي div class="clear") */
+.clear {
+    display: none !important;
+}
+
+
+/*-- Bubbles Animation --*/
+.colorlib-bubbles {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1; /* ده اللي كان ناقص */
+}
+
+    .colorlib-bubbles li {
+        position: absolute;
+        list-style: none;
+        display: block;
+        width: 40px;
+        height: 40px;
+        background-color: rgba(255, 255, 255, 0.15);
+        bottom: -160px;
+        -webkit-animation: square 25s infinite;
+        animation: square 25s infinite;
+        transition-timing-function: linear;
+        border-radius: 50%;
+    }
+
+        .colorlib-bubbles li:nth-child(1) {
+            left: 10%;
+        }
+
+        .colorlib-bubbles li:nth-child(2) {
+            left: 20%;
+            width: 80px;
+            height: 80px;
+            animation-delay: 2s;
+            animation-duration: 17s;
+        }
+
+        .colorlib-bubbles li:nth-child(3) {
+            left: 25%;
+            animation-delay: 4s;
+        }
+
+        .colorlib-bubbles li:nth-child(4) {
+            left: 40%;
+            width: 60px;
+            height: 60px;
+            animation-duration: 22s;
+            background-color: rgba(255, 255, 255, 0.25);
+        }
+
+        .colorlib-bubbles li:nth-child(5) {
+            left: 70%;
+        }
+
+        .colorlib-bubbles li:nth-child(6) {
+            left: 80%;
+            width: 120px;
+            height: 120px;
+            animation-delay: 3s;
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .colorlib-bubbles li:nth-child(7) {
+            left: 32%;
+            width: 160px;
+            height: 160px;
+            animation-delay: 7s;
+        }
+
+        .colorlib-bubbles li:nth-child(8) {
+            left: 55%;
+            width: 20px;
+            height: 20px;
+            animation-delay: 15s;
+            animation-duration: 40s;
+        }
+
+        .colorlib-bubbles li:nth-child(9) {
+            left: 25%;
+            width: 10px;
+            height: 10px;
+            animation-delay: 2s;
+            animation-duration: 40s;
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .colorlib-bubbles li:nth-child(10) {
+            left: 90%;
+            width: 160px;
+            height: 160px;
+            animation-delay: 11s;
+        }
+
+@-webkit-keyframes square {
+    0% {
+        transform: translateY(0);
+    }
+
+    100% {
+        transform: translateY(-700px) rotate(600deg);
+    }
+}
+
+@keyframes square {
+    0% {
+        transform: translateY(0);
+    }
+
+    100% {
+        transform: translateY(-700px) rotate(600deg);
+    }
+}
+/* =========================================
+   إضافات جديدة لتصليح المسافات والخطأ
+   ========================================= */
+
+/* 1. تصليح تباعد الخانات (يقربهم من بعض) */
+.main-agileinfo .form-group,
+.main-agileinfo div {
+    width: 100%;
+    margin-bottom: 10px !important; /* قللنا المسافة هنا */
+}
+
+/* 2. التأكد إن الحقل واخد العرض كامل */
+.main-agileinfo input.form-control,
+.main-agileinfo input {
+    width: 100% !important;
+    margin-bottom: 5px !important;
+}
+
+/* 3. تلوين وتنسيق رسالة الخطأ (عشان تليق مع الخلفية) */
+.main-agileinfo span.text-danger {
+    color: #ffcccc !important;*/ /* لون وردي فاتح */
+    font-size: 0.85em;
+    font-weight: bold;
+    display: block;
+    text-align: left;
+    margin-top: -2px;
+    margin-bottom: 10px;
+    text-shadow: 1px 1px 1px rgba(0,0,0,0.3);
+}
+
+/* =========================================
+   وضع الضغط العالي (Compact Mode)
+   عشان الفورم تظهر كاملة بدون سكرول
+   ========================================= */
+
+/* 1. تصغير الكارت نفسه وتقليل الحشو */
+.main-agileinfo {
+    padding: 1.5em !important; /* قللنا الحشو الداخلي للنص تقريباً */
+    width: 35%; /* عرض مناسب */
+    min-width: 350px; /* عشان الموبايل */
+    margin-top: 1em; /* تقليل المسافة من فوق */
+}
+
+/* 2. تصغير العنوان */
+h1 {
+    font-size: 1.8em !important; /* تصغير حجم الخط */
+    margin-bottom: 10px !important; /* تقليل المسافة تحته */
+}
+
+/* 3. ضغط الخانات (Inputs) */
+.main-agileinfo input.form-control,
+.main-agileinfo input {
+    padding: 8px 12px !important; /* تقليل سمك الخانة نفسها */
+    margin-bottom: 8px !important; /* تقليل المسافة بين كل خانة والتانية */
+    font-size: 0.85em !important; /* تصغير الخط جوه الخانة */
+    height: auto !important;
+}
+
+/* 4. ضغط رسائل الخطأ (لو ظهرت) */
+.main-agileinfo span.text-danger {
+    margin-bottom: 5px !important;
+    font-size: 0.75em !important;
+    line-height: 1;
+}
+
+/* 5. ضغط منطقة الـ Checkbox */
+.wthree-text {
+    margin-bottom: 10px !important;
+    margin-top: 5px !important;
+}
+
+    .wthree-text label {
+        font-size: 0.8em !important;
+    }
+
+/* 6. ضغط زرار الـ Signup */
+input[type="submit"] {
+    padding: 8px !important; /* زرار أرفع */
+    margin: 10px 0 !important; /* تقليل المسافة حول الزرار */
+    font-size: 1em !important;
+}
+
+/* 7. تصغير اللينك اللي تحت (Login Now) */
+.colorlibcopy-agile p {
+    margin-top: 10px !important;
+    font-size: 0.8em !important;
+}
+
+/* إلغاء أي مسافات زيادة من الـ Divs */
+.main-agileinfo .form-group,
+.main-agileinfo div {
+    margin-bottom: 0 !important;
+}
