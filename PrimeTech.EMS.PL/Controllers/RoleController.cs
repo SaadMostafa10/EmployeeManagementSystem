@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PrimeTech.EMS.DAL.Models.Identity;
@@ -6,14 +7,18 @@ using PrimeTech.EMS.PL.Models.Identity;
 using PrimeTech.EMS.PL.Models.Role;
 using System.Threading.Tasks;
 
+
 namespace PrimeTech.EMS.PL.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class RoleController(
        RoleManager<IdentityRole> roleManager,
+       UserManager<ApplicationUser> userManager,
        IWebHostEnvironment environment)
        : Controller
     {
         private readonly RoleManager<IdentityRole> _roleManager = roleManager;
+        private readonly UserManager<ApplicationUser> _userManager = userManager;
         private readonly IWebHostEnvironment _environment = environment;
 
         // Service -> Services [UserManager]
@@ -65,12 +70,21 @@ namespace PrimeTech.EMS.PL.Controllers
             if (id is null) return BadRequest(); // 400
             var role = await _roleManager.FindByIdAsync(id);
             if (role == null) return NotFound(); // 404
-            var roleVM = new RoleViewModel()
+            var users = await _userManager.Users.ToListAsync();
+            var userVM = new RoleViewModel()
             {
                 Id = role.Id,
-                Name = role.Name
+                Name = role.Name,
+                Users = users.Select(user => new UserRoleViewModel
+                {
+                    UserId = user.Id,
+                    UserName = user.UserName,
+                    IsSelected = _userManager.IsInRoleAsync(user, role.Name).Result
+                })
+                .ToList()
             };
-            return View(roleVM);
+            return View(userVM);
+            //return View(roleVM);
         }
 
         [HttpPost]
@@ -88,6 +102,19 @@ namespace PrimeTech.EMS.PL.Controllers
                 role.Id = roleViewModel.Id;
                 role.Name = roleViewModel.Name;
                 var result = await _roleManager.UpdateAsync(role);
+
+                foreach(var userRole in roleViewModel.Users)
+                {
+                    var user = await _userManager.FindByIdAsync(userRole.UserId);
+                    if (user is not null)
+                    {
+                        if (userRole.IsSelected && !(await _userManager.IsInRoleAsync(user, role.Name))) // Sa7
+                            await _userManager.AddToRoleAsync(user, role.Name);
+                        else if (!(userRole.IsSelected) && await _userManager.IsInRoleAsync(user, role.Name)) // checkbox Empty
+                            await _userManager.RemoveFromRoleAsync(user, role.Name);
+                    }
+                }
+
                 if (result.Succeeded)
                     return RedirectToAction(nameof(Index));
                 else

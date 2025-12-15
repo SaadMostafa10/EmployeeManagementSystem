@@ -65,7 +65,7 @@ namespace PrimeTech.EMS.PL
                 {
                     options.LoginPath = "/Account/LogIn";
                     options.AccessDeniedPath = "/Home/Error";
-                    options.LogoutPath = "/Account/LogIn";
+                    options.LogoutPath = "/Account/LogOut";
                 }); // Add => {User SigIn Role} Manager <= AddAuthentication()
 
             builder.Services.AddIdentity<ApplicationUser, IdentityRole>((options) =>

@@ -47,6 +47,7 @@ namespace PrimeTech.EMS.PL.Controllers
 
         #region Create
         [HttpGet]
+        [Authorize(Roles ="Admin")]
         public IActionResult Create()
         {
             //ViewData["Departments"] = _departmentService.GetAllDepartments();
